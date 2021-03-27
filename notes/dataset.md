@@ -37,3 +37,17 @@ so we have:
 
 Okay. If you look for them, you'll be able to find them. That's good.
 
+## 26th of March 2021
+
+urban dictionary - I can't use them for dataset. They are jokingly biased towards a specific topic.
+e.g. 
+```
+#### idiom:wouldn't you know
+["refers to the story told by [Jim Cornette] when a local wrestling [promoter] ,
+ faced with declining attendance ,
+ [rigged] a lottery to give a way a pony so his son won it
+  , so we did not lose money on the deal . As a result anything is is obviously rigged is referred to as wouldn't you know who won the pony ."]
+
+```
+
+other api's I could use?
