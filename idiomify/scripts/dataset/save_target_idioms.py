@@ -1,3 +1,7 @@
+"""
+have to do this because identify-idioms don't provide unnormalized forms of the idioms.
+"""
+
 from idiomify.loaders import load_slide_idioms
 from idiomify.paths import TARGET_IDIOMS_TXT
 

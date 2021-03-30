@@ -131,7 +131,7 @@ def remove_quotation_marks(raw: str) -> str:
     return raw.replace("\"", "").strip()
 
 
-def remove_extras(raw: str) -> str:
+def remove_labels(raw: str) -> str:
     return re.sub(r'^[a-zA-Z]+\. ', "", raw).strip()
 
 
@@ -153,7 +153,7 @@ def cleanse(raw: str) -> str:
     raw = remove_common(raw)
     raw = remove_numbering(raw)
     raw = remove_dangling_dots(raw)
-    raw = remove_extras(raw)
+    raw = remove_labels(raw)
     raw = remove_quotation_marks(raw)
     raw = exceptions(raw)  # anything that need to be replaced
     return raw

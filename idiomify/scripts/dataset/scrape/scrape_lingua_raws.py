@@ -28,7 +28,7 @@ def to_raws(idiom: str) -> Tuple[str, list]:
     except HTTPError as he:
         print("no definitions for:", idiom)
         print("error message:", str(he))
-        raw = list()
+        raw = dict()
     else:
         raw = r.json()
     print("done:", idiom)

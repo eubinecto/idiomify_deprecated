@@ -19,6 +19,7 @@ LINGUA_DEFS_TSV = DEFS_DIR.joinpath("lingua_defs.tsv")  # from lingua api, clean
 WORDNIK_RAWS_TSV = DEFS_DIR.joinpath("wordnik_raws.tsv")
 THEFREE_RAWS_TSV = DEFS_DIR.joinpath("thefree_raws.tsv")
 THEFREE_DEFS_TSV = DEFS_DIR.joinpath("thefree_defs.tsv")
+MERGED_DEFS_TSV = DEFS_DIR.joinpath("merged_defs.tsv")
 
 # files - keys
 RAPID_KEY_TXT = KEYS_DIR.joinpath("rapid_key.txt")
