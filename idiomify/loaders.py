@@ -1,4 +1,8 @@
-from typing import List, Tuple, Union
+import pickle
+from typing import List, Tuple, Union, Optional
+
+import numpy as np
+
 from idiomify.paths import (
     SLIDE_TSV,
     TARGET_IDIOMS_TXT,
@@ -6,7 +10,10 @@ from idiomify.paths import (
     WORDNIK_KEY_TXT,
     URBAN_RAWS_TSV,
     LINGUA_RAWS_TSV,
-    THEFREE_RAWS_TSV, LINGUA_DEFS_TSV, THEFREE_DEFS_TSV, MERGED_DEFS_TSV
+    THEFREE_RAWS_TSV,
+    LINGUA_DEFS_TSV,
+    THEFREE_DEFS_TSV,
+    MERGED_DEFS_TSV, TARGET_EMBEDDINGS_TSV
 )
 import csv
 import json
@@ -24,11 +31,24 @@ def load_slide_idioms() -> List[str]:
     return idioms
 
 
-def load_target_idioms() -> List[str]:
+def norm_case(idiom: str) -> str:
+    return idiom.lower() \
+        .replace("i ", "I ") \
+        .replace(" i ", " I ") \
+        .replace("i'm", "I'm") \
+        .replace("i'll", "I'll") \
+        .replace("i\'d", "I'd")
+
+
+def load_target_idioms(norm: bool = False) -> List[str]:
     idioms = list()
     with open(TARGET_IDIOMS_TXT, 'r') as fh:
         for line in fh:
-            idioms.append(line.strip())
+            idiom = line.strip()
+            if norm:
+                idioms.append(norm_case(idiom))
+            else:
+                idioms.append(idiom)
     return idioms
 
 
@@ -85,3 +105,14 @@ def load_key(name: str) -> str:
         raise ValueError("Invalid name:" + name)
     with open(key_path, 'r') as fh:
         return fh.read().strip()
+
+
+def load_target_embeds() -> List[Tuple[str, Optional[np.ndarray]]]:
+    rows = list()
+    with open(TARGET_EMBEDDINGS_TSV, 'r') as fh:
+        tsv_reader = csv.reader(fh, delimiter="\t")
+        for row in tsv_reader:
+            idiom = row[0]
+            vector = json.loads(row[1])
+            rows.append((idiom, vector))
+    return rows

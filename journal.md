@@ -58,10 +58,33 @@ I have compiled defs from lingua & thefree.
 I have v 0.0.1 idiom2vec model.
 Now it is time to build the bert. 
 
+
 Now, what do I need?
 
-> Preparing the dataset
-Build train validation and test set. 70, 10, 20 might be enough?
+> get idiom2vec model, and build the embedding labels for each idiom.
+
+What should I do with the case of oov?:
+```text
+INFO:gensim.utils:Word2Vec lifecycle event {'fname': '/Users/eubin/Desktop/Projects/Big/idiomify/data/idiom2vec/idiom2vec_001.model', 'datetime': '2021-03-30T15:49:38.590558', 'gensim': '4.0.0', 'python': '3.8.6 (default, Oct  8 2020, 14:06:32) \n[Clang 12.0.0 (clang-1200.0.32.2)]', 'platform': 'macOS-10.16-x86_64-i386-64bit', 'event': 'loaded'}
+Traceback (most recent call last):
+  File "/Users/eubin/Desktop/Projects/Big/idiomify/idiomify/scripts/dataset/save_target_embeds.py", line 21, in <module>
+    main()
+  File "/Users/eubin/Desktop/Projects/Big/idiomify/idiomify/scripts/dataset/save_target_embeds.py", line 16, in main
+    idiom_vec = idiom2vec_model.wv.get_vector(idiom)
+  File "/Users/eubin/Desktop/Projects/Big/idiomify/idiomifyenv/lib/python3.8/site-packages/gensim/models/keyedvectors.py", line 422, in get_vector
+    index = self.get_index(key)
+  File "/Users/eubin/Desktop/Projects/Big/idiomify/idiomifyenv/lib/python3.8/site-packages/gensim/models/keyedvectors.py", line 396, in get_index
+    raise KeyError(f"Key '{key}' not present")
+KeyError: "Key 'American Dream' not present"
+```
+well.. you should leave them empty for now? If you don't have an embedding for American Dream, then
+you simply cannot train idiomifier to laern def -> idiom mapping for that.
+
+So, leave it empty.
+
+
+- Build train and test set. (8:2)
+
 1. compare the case of doing simple upsampling vs. no upsampling at all. (why does that work at all?)
 
 > Training the model
