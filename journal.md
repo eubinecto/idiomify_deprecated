@@ -3,9 +3,7 @@
 
 Started developing.
 
-
 There are three main tasks at stake:
-
 1. prepare the training data
 2. train the model
 3. optimize the model
@@ -80,12 +78,34 @@ KeyError: "Key 'American Dream' not present"
 well.. you should leave them empty for now? If you don't have an embedding for American Dream, then
 you simply cannot train idiomifier to laern def -> idiom mapping for that.
 
-So, leave it empty.
+So, leave it empty.  -> leads to only 528 training instances. Well, that's just about enough for
+prototyping the first iteration.
 
 
-- Build train and test set. (8:2)
+> Build train and eval set. (8:2)
 
-1. compare the case of doing simple upsampling vs. no upsampling at all. (why does that work at all?)
+You should split them up. You could use scikit learn for this..?
+Wait, should I save them up 
+
+Split it into train / eval set. This will later be used. - well, continue doing this tomorrow morning.
+
+
+> How do I do transfer learning with a pre-trained bert? 
+
+First of all, get the terminology right. What I want to do is slightly different from
+"fine-tuning".
+
+Fine-tuning optimizing the embeddings yet again with a custom corpus, whereas transfer learning is
+training a pre-trained bert on a humongous corpus to have it carry out a new task, e.g. idiomify, for my case.
+
+Then, how do I do transfer learning with transformers?
+
+`Trainer()` seems to be what I'm looking for, as it is a simple framework for training
+"any transformer models".
+
+But how do I use it to have a transformer predict 200 numbers?
+
+
 
 > Training the model
 
@@ -104,5 +124,88 @@ e.g.
 Anything that you can learn from Hands-on machine learning with scikit learn? 
 
 
+> In the next iteration
 
-> In later iteration - use a pos tagger maybe? to extract features from it. POS tagging does help.
+use a pos tagger maybe? to extract features from it. POS tagging does help.
+
+
+## 31st of March, 2021
+
+Today, is the reading day. Read papers, and come up with the architecture that fits you.
+1. The primary goal here should be understanding BERT first. <- Make sure you read the paper
+
+Continue from .. Build train and eval set.
+
+Well, looks like you have to start reading papers, now.
+Let's first read three papers.
+1. Do some review on attention is all you need
+2. First, I need reading BERT paper to begin with, and understand the math, mechanics
+3. the distributional semantics -> reverse dictionary paper 
+4. the BERT + reverse dictionary paper -> does that even work that well? Why 
+5. another BERT + reverse dictionary paper
+6. and also the one that pessimistically references 3. There are quite a lot of paper you might want to
+read here.
+
+What methods should you take? Your eyes are faster than your hands.
+Read, understand, and find values from them. 
+
+
+Hey, you might want to compare different models from different papers.
+
+pretraining -> finetuning 으로의 연결을 보아야한다.
+
+
+## 2nd of April, 2021
+
+Here is the architecture of my first iteration.
+
+1. def -> Bert -> def_vec (encoding the definition sentence)
+2. def_vec -> perceptron_h -> def_vec_h
+3. Loss = def_vec_h dot product with idiom_vec_h
+4. train this over my dataset. (def, embedding)
+
+Well, that would be my first iteration.
+
+Then, you improve upon them by quantitative experiments.
+
+
+> how do I do  def -> bert -> def_vec with transformer library?
+
+
+Let's try this example.
+
+## 3rd of April, 2021
+
+```python
+# forward pass
+encoded = model(**tokenized)
+print(encoded[0].shape)  # what is this? - this is a 3-dimensional tensor (e.g. [1, 6, 768])
+print(encoded[1].shape)  # what is this? - this is a 2-dimensional tensor (e.g. [1, 768])
+```
+
+> What is the first one of the tuple?
+
+That is the forward output from each transformer encoder layer. In original BERT, six layers were used, which 
+is why we have 6 in the second dimension. Wait, 
+
+
+> What is the second one of the tuple?
+
+That is the output from the `[CLS]` token.
+
+
+> BERT is pre-trained with a pair of sentences in Next Sentence Prediction task.
+That is, the input has the form of `[CLS] + sent_1 + [SEP] + sent_2`. 
+If we need not one, but two sentences to use BERT as the sentence encoder in the first place,
+then how do you encode just one sentence? 
+
+- https://datascience.stackexchange.com/questions/62658/how-to-get-sentence-embedding-using-bert
+
+Apparently, we could `[PAD]` token as the placeholders for the second sentence.  But in order for this to work,
+`[PAD]` must have been used pre-training. Otherwise, `[PAD]` would be a meaningless symbol to BERT.
+
+- https://albertauyeung.github.io/2020/06/19/bert-tokenization.html
+
+Sure enough, " the token `[PAD]` is used to represent paddings to the sentence.". So the token does have a meaning, 
+namely "this is an empty space".
+
