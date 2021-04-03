@@ -1,15 +1,17 @@
+"""
+just to have a look at the final dataset.
+"""
 
 from idiomify.loaders import load_defs
-import pprint
 
 
 def main():
     merged_defs = load_defs('merged')
-    pp = pprint.PrettyPrinter(indent=3)
     for idiom, defs in merged_defs:
         print("###" + idiom)
         for entry in defs:
             print(entry)
+    print(len(merged_defs))
 
 
 if __name__ == '__main__':

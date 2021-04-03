@@ -4,7 +4,7 @@ just build (def=input, embedding=target, idiom) pair for each idiom.
 import csv
 import json
 from idiomify.loaders import load_defs, load_target_embeds, load_target_idioms
-from idiomify.paths import DEF2EMBED_TSV
+from idiomify.paths import DEF2EMBED_ALL_TSV
 
 
 def main():
@@ -15,7 +15,7 @@ def main():
     # load the target idioms
     target_idioms = load_target_idioms()
 
-    with open(DEF2EMBED_TSV, 'w') as fh:
+    with open(DEF2EMBED_ALL_TSV, 'w') as fh:
         tsv_writer = csv.writer(fh, delimiter="\t")
         for idiom in target_idioms:
             defs = merged_defs[idiom]

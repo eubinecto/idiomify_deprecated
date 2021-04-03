@@ -8,12 +8,9 @@ DEFS_DIR = DATA_DIR.joinpath("defs")
 KEYS_DIR = DATA_DIR.joinpath("keys")
 SLIDE_DIR = DATA_DIR.joinpath("slide")
 IDIOM2VEC_DIR = DATA_DIR.joinpath("idiom2vec")
-
+DEF2EMBED_DIR = DATA_DIR.joinpath('def2embed')
 
 # files - data
-TARGET_IDIOMS_TXT = DATA_DIR.joinpath("target_idioms.txt")  # just a list of target idioms
-TARGET_EMBEDDINGS_TSV = DATA_DIR.joinpath("target_embeddings.tsv")  # (idiom, embeddings)
-DEF2EMBED_TSV = DATA_DIR.joinpath("def2embed.tsv")  # (def, embed)
 
 # files - defs
 URBAN_RAWS_TSV = DEFS_DIR.joinpath("urban_raws.tsv")  # collection of raw data (idiom, resp)
@@ -33,7 +30,14 @@ WORDNIK_KEY_TXT = KEYS_DIR.joinpath("wordnik_key.txt")
 
 # files - slide
 SLIDE_TSV = SLIDE_DIR.joinpath("slide.tsv")
+TARGET_IDIOMS_TXT = SLIDE_DIR.joinpath("target_idioms.txt")  # just a list of target idioms
 
 
 # files - idiom2vec
 IDIOM2VEC_MODEL = IDIOM2VEC_DIR.joinpath("idiom2vec_001.model")
+TARGET_EMBEDDINGS_TSV = IDIOM2VEC_DIR.joinpath("target_embeddings.tsv")  # (idiom, embeddings)
+
+# files - def2embed
+DEF2EMBED_ALL_TSV = DEF2EMBED_DIR.joinpath("def2embed_all.tsv")  # (def, embed)
+DEF2EMBED_TRAIN_TSV = DEF2EMBED_DIR.joinpath("def2embed_train.tsv")
+DEF2EMBED_TEST_TSV = DEF2EMBED_DIR.joinpath("def2embed_test.tsv")

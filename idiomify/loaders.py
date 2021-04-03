@@ -13,7 +13,7 @@ from idiomify.paths import (
     THEFREE_RAWS_TSV,
     LINGUA_DEFS_TSV,
     THEFREE_DEFS_TSV,
-    MERGED_DEFS_TSV, TARGET_EMBEDDINGS_TSV
+    MERGED_DEFS_TSV, TARGET_EMBEDDINGS_TSV, DEF2EMBED_ALL_TSV, DEF2EMBED_TRAIN_TSV, DEF2EMBED_TEST_TSV
 )
 import csv
 import json
@@ -107,7 +107,8 @@ def load_key(name: str) -> str:
         return fh.read().strip()
 
 
-def load_target_embeds() -> List[Tuple[str, Optional[np.ndarray]]]:
+# to load the embeddings
+def load_target_embeds() -> List[Tuple[str, Optional[List[float]]]]:
     rows = list()
     with open(TARGET_EMBEDDINGS_TSV, 'r') as fh:
         tsv_reader = csv.reader(fh, delimiter="\t")
@@ -115,4 +116,23 @@ def load_target_embeds() -> List[Tuple[str, Optional[np.ndarray]]]:
             idiom = row[0]
             vector = json.loads(row[1])
             rows.append((idiom, vector))
+    return rows
+
+
+def load_def2embed(name: str) -> List[Tuple[str, List[float]]]:
+    if name == "all":
+        tsv_path = DEF2EMBED_ALL_TSV
+    elif name == "train":
+        tsv_path = DEF2EMBED_TRAIN_TSV
+    elif name == "test":
+        tsv_path = DEF2EMBED_TEST_TSV
+    else:
+        raise ValueError("Invalid name: " + name)
+    rows = list()
+    with open(tsv_path, 'r') as fh:
+        tsv_reader = csv.reader(fh, delimiter="\t")
+        for row in tsv_reader:
+            def_ = row[0]
+            embed = json.loads(row[1])
+            rows.append((def_, embed))
     return rows

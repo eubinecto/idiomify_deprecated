@@ -59,7 +59,7 @@ e.g. Don't expect something to happen. (The idea being that one couldn't hold on
 e.g.
 Every year; year after year.
 year after year; for years.
-these are four definitions, in two sentences.
+these are four definitions, in two phrases.
 
 
 ## things I'm not sure about.
