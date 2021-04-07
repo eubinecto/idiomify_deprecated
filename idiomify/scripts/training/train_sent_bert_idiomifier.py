@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from transformers import BertModel, BertTokenizer
 from idiomify.idiomifiers import BertIdiomifier
-from idiomify.loaders import load_target_idioms
+from idiomify.loaders import load_target_idioms, load_def2embed
+from torch.utils.data import TensorDataset
 
 
-# parameterize this later.
 @dataclass
 class Metadata:
     bert_model_name: str
@@ -13,18 +13,23 @@ class Metadata:
     idiom2vec_ver: str
     batch_size: int
     epochs: int
+    learning_rate: float
 
 
+# metadata
 METADATA = Metadata(bert_model_name="deepset/sentence_bert",
                     bert_embed_size=768,
                     idiom2vec_embed_size=100,
                     idiom2vec_ver='0.0.1',
                     batch_size=10,
-                    epochs=10)
+                    epochs=10,
+                    learning_rate=1e-5)
 
 
 def main():
     global METADATA
+
+    # --- prepare model ---- #
     sent_bert = BertModel.from_pretrained(METADATA.bert_model_name)
     sent_bert_tok = BertTokenizer.from_pretrained(METADATA.bert_model_name)
     target_idioms = load_target_idioms(norm=True)
@@ -34,8 +39,10 @@ def main():
                                           METADATA.bert_embed_size,
                                           METADATA.idiom2vec_embed_size,
                                           target_idioms)
-    # Now, the problem is.. how do you do this with phrases processing..?
-    phrase_batches = ...
+
+    # --- prepare dataset --- #
+    def2embed_train = load_def2embed('train')
+    def2embed_train_dataset = TensorDataset()
 
     for epoch in range(METADATA.epochs):
         # train.. for each epoch.

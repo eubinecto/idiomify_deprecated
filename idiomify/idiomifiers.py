@@ -14,7 +14,7 @@ from transformers import BertModel, BertTokenizer
 
 class Idiomifier(torch.nn.Module):
 
-    def idiomify(self, phrase: str, idiom2vec: Word2Vec):
+    def idiomify(self, phrase: str, bert_tokenizer: BertTokenizer, idiom2vec: Word2Vec) -> List[Tuple[str, float]]:
         """
         This is the target function to implement, basically.
         :return:
@@ -30,7 +30,7 @@ class LstmIdiomifier(Idiomifier):
     https://www.aclweb.org/anthology/Q16-1002/
     """
 
-    def idiomify(self, phrase: str, idiom2vec: Word2Vec):
+    def idiomify(self, phrase: str, bert_tokenizer: BertTokenizer, idiom2vec: Word2Vec) -> List[Tuple[str, float]]:
         pass
 
 
@@ -39,48 +39,55 @@ class BertIdiomifier(Idiomifier):
     try this with Sentence BERT for encoding a sentence.
     https://arxiv.org/abs/1908.10084
     """
-    def __init__(self, bert_model: BertModel, bert_tokenizer: BertTokenizer,
+    def __init__(self, bert_model: BertModel,
                  bert_embed_size: int, idiom2vec_embed_size: int, idioms: List[str]):
         """
         :param bert_model: (pretrained) bert model to be used for encoding a phrase (sentence)
-        :param bert_tokenizer: the tokenizer that was used to train bert_model.
         :param idiom2vec_embed_size: should be the same as the output of idiom2vec model.
         """
         super().__init__()
         self.bert_model = bert_model
-        self.bert_tokenizer = bert_tokenizer
         self.bert_embed_size = bert_embed_size
         self.idiom2vec_embed_size = idiom2vec_embed_size
         self.idioms = idioms
-        self.linear = torch.nn.Linear(bert_embed_size, idiom2vec_embed_size)  # projection layer.
+        # projection layer.
+        self.linear = torch.nn.Linear(bert_embed_size, idiom2vec_embed_size)
 
-    def forward(self, phrases: List[str]) -> torch.Tensor:
+    def forward(self, X: torch.Tensor) -> torch.Tensor:
         """
-        :param phrases: list of phrases to encode. (1, N).
+        :param X: (N, 3, M). 3 dimensional tensor. column 0: token ids, column 1: token type, column 3: pos encoding.
         :return:
         """
-        # first, encode the sentence into token_ids, token_type_ids and attention masks.
-        batch = self.bert_tokenizer(phrases,
-                                    # return as pytorch tensor
-                                    return_tensors='pt',
-                                    # pad the short ones to have a batch of the same length
-                                    padding=True)  # (N,M), where M = maximum length.
-        # forward pass
-        out = self.bert_model(**batch)  # idx = 0: token_hidden, 1: cls_hidden
-        cls_hidden = out[1]  # (N, bert_embed_size)
-        # down-project this with a linear layer and return
-        return self.linear.forward(cls_hidden)  # (N, idiom2vec_embed_size)
+        X_token_ids = X[:, 0]
+        X_token_type_ids = X[:, 1]
+        X_attention_masks = X[:, 2]
+        # forward pass of the bert model
+        outs = self.bert_model(input_ids=X_token_ids,
+                               attention_masks=X_attention_masks,
+                               token_type_ids=X_token_type_ids)
+        # idx = 0: token_hidden, 1: cls_hidden
+        Y1_cls_hiddens = outs[1]  # (N, bert_embed_size)
+        Y2_embeddings = self.linear.forward(Y1_cls_hiddens)  # (N, idiom2vec_embed_size)
+        return Y2_embeddings
 
     # this is for inference.
-    def idiomify(self, phrase: str, idiom2vec: Word2Vec) -> List[Tuple[str, float]]:
+    def idiomify(self, phrase: str, bert_tokenizer: BertTokenizer, idiom2vec: Word2Vec) -> List[Tuple[str, float]]:
         """
         given a query, this returns a
         :param phrase:
+        :param bert_tokenizer:
         :param idiom2vec:
         :return:
         """
-        # get the prediction.
-        phrase_vector = self.forward([phrase])
+        # we don't need padding, because it is just only one phrase.
+        batch_encoding = bert_tokenizer(phrase, return_tensors='pt')
+        # build a 3-dimensional tensor. (1, 3, length)
+        X = torch.Tensor([
+            [batch_encoding['input_ids'],
+             batch_encoding['token_type_ids'],
+             batch_encoding['attention_mask']]
+        ])
+        phrase_vector = self.forward(X)[0]  # get the first one.
         # phrase similar by vector.
         sim_idioms = [
             (word, score)

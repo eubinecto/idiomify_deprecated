@@ -174,10 +174,48 @@ Then, you improve upon them by quantitative experiments.
 
 Let's try this example.
 
+
 ## 3rd of April, 2021
 
 I want to finish off the first iteration today. 
-- [ ] train & test split (80 / 20)
-- [ ] define the loss - what loss should you use? What did Hills, Cho et. al use for the loss? And why?
+- [x] train & test split (80 / 20)
 - [ ] implement the mini batch SGD
+- [ ] define the loss - what loss should you use? What did Hills, Cho et. al use for the loss? And why?
 - [ ] implement training with epochs
+
+
+## 7th of April, 2021
+
+그러게. 일도 안하면서 낮에 도대체 뭐하면서 지내는 건지?
+공부를 할거면 진지하게, 일을 한다는 태도로 하자. 그게 중요하다.
+그냥 막무가내로 놀고 싶을 때 놀고, 공부하고 싶을 때 공부하는 것은 어른답지 못한 것.
+루틴을 만들고 지키자.
+
+what is your goal? in the next 2-hour session?
+
+Well, my goal is to finish my first iteration.
+
+In the evening, my goal then would be to finish my second iteration - Improve upon the first iteration.
+
+Before you go to bed, set out all the deadlines up ahead.
+
+Cherish this moment. You are working. Preparing for your future. This summer.
+YOu are paving your own path.
+
+In the next three hours: you'll accomplish these:
+- [ ] build pytorch TensorDataset with the definitions 25
+- [ ] build pytorch dataloader with the inputs 25
+- [ ] implement the mini batch SGD 25
+- [ ] define the loss. learn what loss they usd in that paper 25
+- [ ] implement training with epochs 25
+- [ ] train the model, and finish the epoch. 25
+
+See that goal in full color. You input a sentence. It outputs a list of the most probable idioms!
+
+
+> Do I need to have the bert tokenizer within Idiomifier class?
+
+No, I don't think so, at least for now.
+
+The plan is...
+you use the tokenizer outside.
