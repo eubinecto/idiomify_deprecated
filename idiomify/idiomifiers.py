@@ -24,12 +24,11 @@ class Idiomifier(torch.nn.Module):
 
 class LstmIdiomifier(Idiomifier):
     """
-    uses LSTM for encoding a sentence.
+    uses LSTM for encoding a sentence. We may be able to learn the advantage of transfer learning.
     This is a baseline model.
     Learning to Understand Phrases by Embedding the Dictionary
     https://www.aclweb.org/anthology/Q16-1002/
     """
-
     def idiomify(self, phrase: str, bert_tokenizer: BertTokenizer, idiom2vec: Word2Vec) -> List[Tuple[str, float]]:
         pass
 
@@ -46,24 +45,23 @@ class BertIdiomifier(Idiomifier):
         :param idiom2vec_embed_size: should be the same as the output of idiom2vec model.
         """
         super().__init__()
-        self.bert_model = bert_model
         self.bert_embed_size = bert_embed_size
         self.idiom2vec_embed_size = idiom2vec_embed_size
         self.idioms = idioms
-        # projection layer.
-        self.linear = torch.nn.Linear(bert_embed_size, idiom2vec_embed_size)
+        self.bert_model = bert_model  # sentence encoder layer
+        self.linear = torch.nn.Linear(bert_embed_size, idiom2vec_embed_size)  # projection layer
 
-    def forward(self, X: torch.Tensor) -> torch.Tensor:
+    def forward(self, X_batch: torch.Tensor) -> torch.Tensor:
         """
-        :param X: (N, 3, M). 3 dimensional tensor. column 0: token ids, column 1: token type, column 3: pos encoding.
+        :param X_batch: (N, 3, M). 3 dimensional tensor. column 0: token ids, column 1: token type, column 3: pos encoding.
         :return:
         """
-        X_token_ids = X[:, 0]
-        X_token_type_ids = X[:, 1]
-        X_attention_masks = X[:, 2]
-        # forward pass of the bert model
+        X_token_ids = X_batch[:, 0]
+        X_token_type_ids = X_batch[:, 1]
+        X_attention_mask = X_batch[:, 2]
+        # forward pass to the bert module
         outs = self.bert_model(input_ids=X_token_ids,
-                               attention_masks=X_attention_masks,
+                               attention_mask=X_attention_mask,
                                token_type_ids=X_token_type_ids)
         # idx = 0: token_hidden, 1: cls_hidden
         Y1_cls_hiddens = outs[1]  # (N, bert_embed_size)
@@ -87,7 +85,8 @@ class BertIdiomifier(Idiomifier):
              batch_encoding['token_type_ids'],
              batch_encoding['attention_mask']]
         ])
-        phrase_vector = self.forward(X)[0]  # get the first one.
+        # only one vector will come out, so squeeze it out.
+        phrase_vector = torch.squeeze(self.forward(X))
         # phrase similar by vector.
         sim_idioms = [
             (word, score)
@@ -95,5 +94,3 @@ class BertIdiomifier(Idiomifier):
             if word in self.idioms  # only get those that are idioms.
         ]
         return sim_idioms
-
-

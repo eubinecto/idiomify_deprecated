@@ -200,12 +200,12 @@ In the evening, my goal then would be to finish my second iteration - Improve up
 Before you go to bed, set out all the deadlines up ahead.
 
 Cherish this moment. You are working. Preparing for your future. This summer.
-YOu are paving your own path.
+You are paving your own path.
 
 In the next three hours: you'll accomplish these:
-- [ ] build pytorch TensorDataset with the definitions 25
-- [ ] build pytorch dataloader with the inputs 25
-- [ ] implement the mini batch SGD 25
+- [X] build pytorch TensorDataset with the definitions 25
+- [X] build pytorch dataloader with the inputs 25
+- [ ] implement the optimizer.
 - [ ] define the loss. learn what loss they usd in that paper 25
 - [ ] implement training with epochs 25
 - [ ] train the model, and finish the epoch. 25
@@ -215,7 +215,8 @@ See that goal in full color. You input a sentence. It outputs a list of the most
 
 > Do I need to have the bert tokenizer within Idiomifier class?
 
-No, I don't think so, at least for now.
+No, I don't think so, as you need that only for preprocessing the training data.
 
-The plan is...
-you use the tokenizer outside.
+
+tensorboard - Could I also use this to measure the
+moment for early stopping?

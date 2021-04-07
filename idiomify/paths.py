@@ -9,8 +9,8 @@ KEYS_DIR = DATA_DIR.joinpath("keys")
 SLIDE_DIR = DATA_DIR.joinpath("slide")
 IDIOM2VEC_DIR = DATA_DIR.joinpath("idiom2vec")
 DEF2EMBED_DIR = DATA_DIR.joinpath('def2embed')
+IDIOMIFIER_DIR = DATA_DIR.joinpath('idiomifier')
 
-# files - data
 
 # files - defs
 URBAN_RAWS_TSV = DEFS_DIR.joinpath("urban_raws.tsv")  # collection of raw data (idiom, resp)
@@ -41,3 +41,7 @@ TARGET_EMBEDDINGS_TSV = IDIOM2VEC_DIR.joinpath("target_embeddings.tsv")  # (idio
 DEF2EMBED_ALL_TSV = DEF2EMBED_DIR.joinpath("def2embed_all.tsv")  # (def, embed)
 DEF2EMBED_TRAIN_TSV = DEF2EMBED_DIR.joinpath("def2embed_train.tsv")
 DEF2EMBED_TEST_TSV = DEF2EMBED_DIR.joinpath("def2embed_test.tsv")
+
+
+# files - idiomifier
+S_BERT_IDIOMIFIER_001 = IDIOMIFIER_DIR.joinpath('s_bert_idiomifier_001.model')  # 001, first iteration.

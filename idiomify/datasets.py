@@ -45,6 +45,6 @@ class Def2EmbedDataset(Dataset):
         :param idx:
         :return:
         """
-        X_encodings = self.X[idx]  # (3, M)
+        X_encodings = self.X[:, idx]  # (3, M)
         y = self.Y[idx]  # (1, idiom2vec_embed_size)
         return X_encodings, y
