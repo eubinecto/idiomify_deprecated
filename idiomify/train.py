@@ -44,7 +44,7 @@ def main():
 
     # --- prepare the dataset --- #
     sent_bert_tokenizer = BertTokenizer.from_pretrained(args.bert_model_name)
-    def2embed_train = load_def2embed('train')
+    def2embed_train = load_def2embed('train')  # load the training dataset.
     defs_train = [def_ for def_, _ in def2embed_train]
     embeds_train = [embed for _, embed in def2embed_train]
     # torch TensorDataset
