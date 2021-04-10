@@ -14,7 +14,11 @@ from transformers import BertModel, BertTokenizer
 
 class Idiomifier(torch.nn.Module):
 
-    def idiomify(self, phrase: str, bert_tokenizer: BertTokenizer, idiom2vec: Word2Vec) -> List[Tuple[str, float]]:
+    # this is for inference.
+    def idiomify(self, phrase: str,
+                 idioms: List[str],
+                 bert_tokenizer: BertTokenizer,
+                 idiom2vec: Word2Vec) -> List[Tuple[str, float]]:
         """
         This is the target function to implement, basically.
         :return:
@@ -29,7 +33,11 @@ class LstmIdiomifier(Idiomifier):
     Learning to Understand Phrases by Embedding the Dictionary
     https://www.aclweb.org/anthology/Q16-1002/
     """
-    def idiomify(self, phrase: str, bert_tokenizer: BertTokenizer, idiom2vec: Word2Vec) -> List[Tuple[str, float]]:
+    # this is for inference.
+    def idiomify(self, phrase: str,
+                 idioms: List[str],
+                 bert_tokenizer: BertTokenizer,
+                 idiom2vec: Word2Vec) -> List[Tuple[str, float]]:
         pass
 
 
@@ -39,7 +47,7 @@ class BertIdiomifier(Idiomifier):
     https://arxiv.org/abs/1908.10084
     """
     def __init__(self, bert_model: BertModel,
-                 bert_embed_size: int, idiom2vec_embed_size: int, idioms: List[str]):
+                 bert_embed_size: int, idiom2vec_embed_size: int):
         """
         :param bert_model: (pretrained) bert model to be used for encoding a phrase (sentence)
         :param idiom2vec_embed_size: should be the same as the output of idiom2vec model.
@@ -47,7 +55,6 @@ class BertIdiomifier(Idiomifier):
         super().__init__()
         self.bert_embed_size = bert_embed_size
         self.idiom2vec_embed_size = idiom2vec_embed_size
-        self.idioms = idioms
         self.bert_model = bert_model  # sentence encoder layer
         self.linear = torch.nn.Linear(bert_embed_size, idiom2vec_embed_size)  # projection layer
 
@@ -69,10 +76,14 @@ class BertIdiomifier(Idiomifier):
         return Y2_embeddings
 
     # this is for inference.
-    def idiomify(self, phrase: str, bert_tokenizer: BertTokenizer, idiom2vec: Word2Vec) -> List[Tuple[str, float]]:
+    def idiomify(self, phrase: str,
+                 idioms: List[str],
+                 bert_tokenizer: BertTokenizer,
+                 idiom2vec: Word2Vec) -> List[Tuple[str, float]]:
         """
         given a query, this returns a
         :param phrase:
+        :param idioms:
         :param bert_tokenizer:
         :param idiom2vec:
         :return:
@@ -88,9 +99,10 @@ class BertIdiomifier(Idiomifier):
         # only one vector will come out, so squeeze it out.
         phrase_vector = torch.squeeze(self.forward(X))
         # phrase similar by vector.
+        # TODO: maybe put this logic within idiom2vec model.
         sim_idioms = [
             (word, score)
             for word, score in idiom2vec.wv.similar_by_vector(vector=phrase_vector.numpy(), topn=None)
-            if word in self.idioms  # only get those that are idioms.
+            if word in idioms  # only get those that are idioms.
         ]
         return sim_idioms

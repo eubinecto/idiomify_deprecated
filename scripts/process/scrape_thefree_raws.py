@@ -2,9 +2,9 @@ import csv
 import json
 from itertools import cycle
 from typing import Tuple
-from idiomify.loaders import load_target_idioms
+from idiomify.loaders import TargetIdiomsLoader
 from idiomify.scrapers import ThefreeRawsScraper
-from idiomify.paths import THEFREE_RAWS_TSV
+from idiomify.paths import THEFREE_RAWS_TSV, TARGET_IDIOMS_TXT
 import time
 from tqdm import tqdm
 
@@ -29,7 +29,7 @@ def to_raws(idiom: str) -> Tuple[str, list]:
 
 
 def main():
-    target_idioms = load_target_idioms()
+    target_idioms = TargetIdiomsLoader().load(TARGET_IDIOMS_TXT)
     # it seems hyphens don't help here.
     idiom_raws = list()
     for idiom in tqdm(target_idioms):

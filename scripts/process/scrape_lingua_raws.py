@@ -7,14 +7,18 @@ from multiprocessing import Pool
 from typing import Tuple
 import requests
 from requests import HTTPError
-from idiomify.loaders import load_key, load_target_idioms
-from idiomify.paths import LINGUA_RAWS_TSV
+from idiomify.loaders import ApiKeyLoader, TargetIdiomsLoader
+from idiomify.paths import (
+    LINGUA_RAWS_TSV,
+    RAPID_KEY_TXT,
+    TARGET_IDIOMS_TXT
+)
 
 
 URL = "https://lingua-robot.p.rapidapi.com/language/v1/entries/en/"
 
 HEADERS = {
-    'x-rapidapi-key': load_key('rapid'),
+    'x-rapidapi-key': ApiKeyLoader().load(RAPID_KEY_TXT),
     'x-rapidapi-host': "lingua-robot.p.rapidapi.com"
     }
 
@@ -37,7 +41,7 @@ def to_raws(idiom: str) -> Tuple[str, list]:
 
 def main():
     # the data to scrape (idiom -> raws)
-    target_idioms = load_target_idioms()
+    target_idioms = TargetIdiomsLoader().load(TARGET_IDIOMS_TXT)
     with Pool(processes=4) as p:
         idiom_raws = p.map(to_raws, target_idioms)
     # now write them

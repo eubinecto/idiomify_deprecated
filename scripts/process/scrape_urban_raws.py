@@ -5,14 +5,15 @@ out list of (idiom, raws)
 """
 import json
 from idiomify.paths import URBAN_RAWS_TSV
-from typing import List, Tuple
+from typing import Tuple
 from requests import HTTPError
-from idiomify.loaders import load_target_idioms, load_key
+from idiomify.loaders import TargetIdiomsLoader, ApiKeyLoader
+from idiomify.paths import RAPID_KEY_TXT, TARGET_IDIOMS_TXT
 import requests
 import csv
 from multiprocessing import Pool
 
-RAPID_API_KEY = load_key('rapid')
+RAPID_API_KEY = ApiKeyLoader().load(RAPID_KEY_TXT)
 # the endpoint of rapid api
 URL = "https://mashape-community-urban-dictionary.p.rapidapi.com/define"
 # key and host
@@ -40,7 +41,7 @@ def to_raws(idiom: str) -> Tuple[str, list]:
 
 def main():
     # the data to scrape (idiom -> raws)
-    target_idioms = load_target_idioms()
+    target_idioms = TargetIdiomsLoader().load(TARGET_IDIOMS_TXT)
     with Pool(processes=2) as p:
         idiom_raws = p.map(to_raws, target_idioms)
     # now write them

@@ -1,7 +1,7 @@
 import json
 from typing import List
-from idiomify.loaders import load_raws
-from idiomify.paths import LINGUA_DEFS_TSV
+from idiomify.loaders import TsvTuplesLoader
+from idiomify.paths import LINGUA_DEFS_TSV, LINGUA_RAWS_TSV
 import re
 import csv
 
@@ -51,7 +51,7 @@ def split(raw_def: str) -> List[str]:
 
 
 def main():
-    lingua_raws = load_raws(name='lingua')
+    lingua_raws = TsvTuplesLoader().load(LINGUA_RAWS_TSV)
     with open(LINGUA_DEFS_TSV, 'w') as fh:
         tsv_writer = csv.writer(fh, delimiter="\t")
         for idiom, raw in lingua_raws:

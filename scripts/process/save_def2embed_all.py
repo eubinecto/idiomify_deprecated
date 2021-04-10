@@ -3,17 +3,23 @@ just build (def=input, embedding=target, idiom) pair for each idiom.
 """
 import csv
 import json
-from idiomify.loaders import load_defs, load_target_embeds, load_target_idioms
-from idiomify.paths import DEF2EMBED_ALL_TSV
+from idiomify.loaders import TargetIdiomsLoader, TsvTuplesLoader
+from idiomify.paths import (
+    MERGED_DEFS_TSV,
+    TARGET_EMBEDDINGS_TSV,
+    DEF2EMBED_ALL_TSV,
+    TARGET_IDIOMS_TXT
+)
 
 
 def main():
     # load the definitions, in dict
-    merged_defs = dict(load_defs('merged'))
+    tsv_tuples_loader = TsvTuplesLoader()
+    merged_defs = dict(tsv_tuples_loader.load(MERGED_DEFS_TSV))
     # load the embeddings, in dict
-    target_embeds = dict(load_target_embeds())
+    target_embeds = dict(tsv_tuples_loader.load(TARGET_EMBEDDINGS_TSV))
     # load the target idioms
-    target_idioms = load_target_idioms()
+    target_idioms = TargetIdiomsLoader().load(TARGET_IDIOMS_TXT)
 
     with open(DEF2EMBED_ALL_TSV, 'w') as fh:
         tsv_writer = csv.writer(fh, delimiter="\t")

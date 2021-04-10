@@ -5,24 +5,28 @@ the python script for training an idiomifier.
 
 from transformers import BertModel, BertTokenizer
 from idiomify.idiomifiers import BertIdiomifier
-from idiomify.loaders import load_target_idioms, load_def2embed
 from idiomify.datasets import Def2EmbedDataset
-from idiomify.paths import S_BERT_IDIOMIFIER_001
+from idiomify.loaders import TsvTuplesLoader
 from torch.utils.data import DataLoader
 import torch
 import argparse
 
 
 def main():
+    # seize the moment. You know, this is an addiction
+    # it's not normal to fill it this way. 
     parser = argparse.ArgumentParser()
     parser.add_argument('--bert_model_name',
                         type=str,
+                        # we use sentence bert as the default
                         default="deepset/sentence_bert")
     parser.add_argument('--bert_embed_size',
                         type=int,
+                        # this is the default embedding size of the sentence bert.
                         default=768)
     parser.add_argument('--idiom2vec_embed_size',
                         type=int,
+                        # this is what I set for idiom2vec, for now.
                         default=100)
     parser.add_argument('--batch_size',
                         type=int,
@@ -33,9 +37,12 @@ def main():
     parser.add_argument('--learning_rate',
                         type=float,
                         default=1e-5)
-    parser.add_argument('--save_path',
+    parser.add_argument('--def2embed_path',
                         type=str,
-                        default=S_BERT_IDIOMIFIER_001)
+                        default="../data/def2embed/def2embed_train.tsv")
+    parser.add_argument('--model_path',
+                        type=str,
+                        default="../data/idiomifier/idiomifier_s_bert_001.model")
     args = parser.parse_args()
     # TODO: use tensorboard to visualise the training progress.
 
@@ -44,7 +51,7 @@ def main():
 
     # --- prepare the dataset --- #
     sent_bert_tokenizer = BertTokenizer.from_pretrained(args.bert_model_name)
-    def2embed_train = load_def2embed('train')  # load the training dataset.
+    def2embed_train = TsvTuplesLoader().load(args.def2embed_path)
     defs_train = [def_ for def_, _ in def2embed_train]
     embeds_train = [embed for _, embed in def2embed_train]
     # torch TensorDataset
@@ -56,14 +63,9 @@ def main():
 
     # --- prepare the model --- #
     sent_bert = BertModel.from_pretrained(args.bert_model_name)  # load a pretrained model
-    target_idioms = load_target_idioms(norm=True)  # just to implement idiomify.
     idiomifier = BertIdiomifier(bert_model=sent_bert,
                                 bert_embed_size=args.bert_embed_size,
-                                idiom2vec_embed_size=args.idiom2vec_embed_size,
-                                # need this for idiomify method.
-                                # maybe..include this within idiom2vec?
-                                # you could subclass Word2Vec.
-                                idioms=target_idioms)
+                                idiom2vec_embed_size=args.idiom2vec_embed_size)
     idiomifier = idiomifier.to(device)  # transfer the net to cuda/cpu.
 
     # --- prepare the optimizer & loss --- #
@@ -93,7 +95,8 @@ def main():
             adam_optim.step()
 
     # then save the model
-    torch.save(idiomifier.state_dict(), args.save_path)
+    # will this save the idioms as well?
+    torch.save(idiomifier.state_dict(), args.model_path)
 
 
 if __name__ == '__main__':

@@ -70,8 +70,8 @@ e.g. Typically used in the phrase "nothing to write home about,"
 """
 import json
 from typing import List
-from idiomify.paths import THEFREE_DEFS_TSV
-from idiomify.loaders import load_raws
+from idiomify.paths import THEFREE_DEFS_TSV, THEFREE_RAWS_TSV
+from idiomify.loaders import TsvTuplesLoader
 import re
 import csv
 
@@ -174,7 +174,7 @@ def parse(raw: str) -> List[str]:
 
 
 def main():
-    thefree_raws = load_raws("thefree")
+    thefree_raws = TsvTuplesLoader().load(tsv_path=THEFREE_RAWS_TSV)
     # cleanse them.
     thefree_cleansed = [
         (idiom, [cleanse(raw) for raw in raws if cleanse(raw)])

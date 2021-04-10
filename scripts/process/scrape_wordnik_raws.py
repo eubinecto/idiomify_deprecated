@@ -3,13 +3,13 @@ import json
 from typing import Tuple
 import requests
 from requests import HTTPError
-from idiomify.paths import WORDNIK_RAWS_TSV
-from idiomify.loaders import load_key, load_target_idioms
+from idiomify.paths import WORDNIK_RAWS_TSV, WORDNIK_KEY_TXT, TARGET_IDIOMS_TXT
+from idiomify.loaders import ApiKeyLoader, TargetIdiomsLoader
 
 URL = "https://api.wordnik.com/v4/word.json/{word}/definitions"
 
 PARAMS = {
-        'api_key': load_key('wordnik'),
+        'api_key': ApiKeyLoader().load(WORDNIK_KEY_TXT),
         'limit': 200,
         'sourceDictionaries': 'all',
         'useCanonical': True
@@ -34,7 +34,7 @@ def to_raws(idiom: str) -> Tuple[str, list]:
 
 def main():
     # the data to scrape (idiom -> raws)
-    target_idioms = load_target_idioms()
+    target_idioms = TargetIdiomsLoader().load(TARGET_IDIOMS_TXT)
     idiom_raws = [
         to_raws(idiom)
         for idiom in target_idioms

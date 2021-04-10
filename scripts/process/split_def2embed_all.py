@@ -6,8 +6,8 @@ import json
 from typing import List
 
 from sklearn.model_selection import train_test_split
-from idiomify.loaders import load_def2embed
-from idiomify.paths import DEF2EMBED_TRAIN_TSV, DEF2EMBED_TEST_TSV
+from idiomify.loaders import TsvTuplesLoader
+from idiomify.paths import DEF2EMBED_ALL_TSV, DEF2EMBED_TRAIN_TSV, DEF2EMBED_TEST_TSV
 import csv
 
 
@@ -27,7 +27,7 @@ def write_set(defs: List[str], embeds: List[List[float]], tsv_path: str):
 
 def main():
     global RANDOM_STATE
-    def2embed_all = load_def2embed('all')
+    def2embed_all = TsvTuplesLoader().load(DEF2EMBED_ALL_TSV)
     x = [def_ for def_, _ in def2embed_all]  # only the definitions
     y = [embed for _, embed in def2embed_all]  # only the embeds (labels)
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2,

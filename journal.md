@@ -220,3 +220,11 @@ No, I don't think so, as you need that only for preprocessing the training data.
 
 tensorboard - Could I also use this to measure the
 moment for early stopping?
+
+
+## 10th of April, 2021
+
+Need some refactoring on the loader.
+
+The loaders should be path-independent, otherwise I can't use them when I 
+pip install the library.

@@ -2,11 +2,12 @@
 just to have a look at the final dataset.
 """
 
-from idiomify.loaders import load_defs
+from idiomify.loaders import TsvTuplesLoader
+from idiomify.paths import MERGED_DEFS_TSV
 
 
 def main():
-    merged_defs = load_defs('merged')
+    merged_defs = TsvTuplesLoader().load(MERGED_DEFS_TSV)
     for idiom, defs in merged_defs:
         print("###" + idiom)
         for entry in defs:

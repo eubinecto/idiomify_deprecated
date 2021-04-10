@@ -2,8 +2,8 @@
 have to do this because identify-idioms don't provide unnormalized forms of the idioms.
 """
 
-from idiomify.loaders import load_slide_idioms
-from idiomify.paths import TARGET_IDIOMS_TXT
+from idiomify.loaders import SlideIdiomsLoader
+from idiomify.paths import TARGET_IDIOMS_TXT, SLIDE_TSV
 
 TARGET_IDIOM_MIN_LENGTH = 14
 TARGET_IDIOM_MIN_WORD_COUNT = 3
@@ -45,7 +45,7 @@ def main():
 
     target_idioms = [
         idiom
-        for idiom in load_slide_idioms()
+        for idiom in SlideIdiomsLoader().load(SLIDE_TSV)
         if is_target(idiom)
     ]
     target_idioms += MORE_CASES
