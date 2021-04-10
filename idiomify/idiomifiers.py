@@ -6,7 +6,6 @@ Compare that with SBert. - should be better than Bert.
 Compare that with SBertEnhanced. (extracting pos representations). - should be better than SBert alone.
 """
 from typing import List, Tuple
-
 import torch
 from gensim.models import Word2Vec
 from transformers import BertModel, BertTokenizer
@@ -24,21 +23,6 @@ class Idiomifier(torch.nn.Module):
         :return:
         """
         raise NotImplementedError
-
-
-class LstmIdiomifier(Idiomifier):
-    """
-    uses LSTM for encoding a sentence. We may be able to learn the advantage of transfer learning.
-    This is a baseline model.
-    Learning to Understand Phrases by Embedding the Dictionary
-    https://www.aclweb.org/anthology/Q16-1002/
-    """
-    # this is for inference.
-    def idiomify(self, phrase: str,
-                 idioms: List[str],
-                 bert_tokenizer: BertTokenizer,
-                 idiom2vec: Word2Vec) -> List[Tuple[str, float]]:
-        pass
 
 
 class BertIdiomifier(Idiomifier):

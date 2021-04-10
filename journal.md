@@ -228,3 +228,63 @@ Need some refactoring on the loader.
 
 The loaders should be path-independent, otherwise I can't use them when I 
 pip install the library.
+
+
+
+Just simply running the code on my server does not get use of the GPU.
+
+cuda.is_available() returns false.
+
+It seems I have to install cuda first. and then.. install cuda-supported pytorch.
+
+
+see if I have a cuda supported gpu:
+```commandline
+(idiomifyenv) eubin@eubinCloud:~/idiomify$ lspci | grep -i nvidia
+06:00.0 VGA compatible controller: NVIDIA Corporation TU104 [GeForce RTX 2080 Rev. A] (rev a1)
+06:00.1 Audio device: NVIDIA Corporation TU104 HD Audio Controller (rev a1)
+06:00.2 USB controller: NVIDIA Corporation TU104 USB 3.1 Host Controller (rev a1)
+06:00.3 Serial bus controller [0c80]: NVIDIA Corporation TU104 USB Type-C UCSI Controller (rev a1)
+```
+
+I have a rtx 2080, which is compatible with cuda.
+
+
+- 우분투에서 cuda 설치하기.
+  - https://ghostweb.tistory.com/832
+    
+
+checking ubuntu version:
+```commandline
+eubin@eubinCloud:~$ lsb_release -a
+No LSB modules are available.
+Distributor ID:	Ubuntu
+Description:	Ubuntu 20.04.1 LTS
+Release:	20.04
+Codename:	focal
+```
+
+Mine is 20.04.1.
+
+
+checking cpu architecture:
+```commandline
+eubin@eubinCloud:~$ uname -m
+x86_64
+```
+
+Mine is x86_64. amd64 in other words.
+ 
+
+Next....
+- https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=2004&target_type=runfilelocal
+go there, select the right options,  and download a cuda installer. 
+  
+
+I had a problem where... apt install cuda won't work.
+
+
+- https://askubuntu.com/questions/598607/package-dependency-problem-while-installing-cuda-on-ubuntu-14-04
+using aptitude fixed the problem.
+  
+

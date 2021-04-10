@@ -7,5 +7,6 @@ python3 ../../idiomify/train.py \
   --batch_size=20 \
   --epochs=10 \
   --learning_rate=1e-5 \
+  --num_workers=5 \
   --def2embed_path="../../data/def2embed/def2embed_train.tsv" \
   --model_path="../../data/idiomifier/s_bert_idiomifier_001.model"
