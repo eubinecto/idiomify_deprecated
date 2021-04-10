@@ -2,7 +2,6 @@
 the python script for training an idiomifier.
 
 """
-from torch.utils.tensorboard import SummaryWriter
 from transformers import BertModel, BertTokenizer
 from idiomify.idiomifiers import BertIdiomifier
 from idiomify.datasets import Def2EmbedDataset
@@ -90,11 +89,6 @@ def main():
     # https://eehoeskrap.tistory.com/462
     start = torch.cuda.Event(enable_timing=True)
     end = torch.cuda.Event(enable_timing=True)
-
-    # --- prepare a tensorboard writer --- #
-    writer = SummaryWriter(args.log_dir)
-    writer.add_graph(idiomifier)
-    writer.close()
 
     # --- train the model --- #
     start.record()  # record start time
