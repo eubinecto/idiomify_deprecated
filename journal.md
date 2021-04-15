@@ -347,5 +347,43 @@ this will be managable.
 
 역시, keep it simple. start simple. Don't start with a moon shot. You'd end up wasting your time.
 
+aha... so what you need is a doc2vec.
+embedding doc in the same space as in the words.
+
+
+```commandline
+### feeling nervous ###
+hard_done_by 0.47776693
+at_arm's_length 0.4168237
+comfortable_in_one's_own_skin 0.40860572
+mint_chocolate_chip 0.39100903
+dyed_in_the_wool 0.37792718
+get_under_someone's_skin 0.37533173
+surprise_surprise 0.37454492
+hot_under_the_collar 0.3706216
+out_of_sorts 0.36664337
+no_spring_chicken 0.35896105
+### a dilemma or difficult circumstance ###
+in_the_driving_seat 0.4062037
+catch-22 0.38944834
+come_to_grips_with 0.38771
+as_best_one_can 0.37420952
+life-or-death 0.37196288
+race_against_time 0.3703875
+fill_one's_boots 0.36326396
+all_one's_eggs_in_one_basket 0.35644692
+get_one's_head_around 0.35432136
+surprise_surprise 0.35314885
+
+```
+
+가능성이 보인다. 이미 definition도 있으므로, evaluation도 가능할 것.
+다음으로 doc2vec, tfidf를 훈련하자. 어차피 collocation을 구하기 위해 각 idiom에 대한 tfidf도 구하게 될것이므로.
+그걸 한번 해보자고.
+
+
+다음으로 필요한건.
+1. doc2vec training - 001.
+2. tfidf (collocation) 
 
 

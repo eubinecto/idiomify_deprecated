@@ -1,66 +1,66 @@
 """
 Will experiment with different models.
-Starting Lstm as the baseline. - this is mainly for learning experience.
-Compare that with Bert. - should be better than lstm.
-Compare that with SBert. - should be better than Bert.
-Compare that with SBertEnhanced. (extracting pos representations). - should be better than SBert alone.
 """
-from typing import List, Tuple, Optional, Dict
-
-import numpy as np
-import torch
-from gensim.models import KeyedVectors
-from transformers import BertModel, BertTokenizer
-from idiomify.datasets import encode_phrase
+from typing import List, Tuple
+from gensim.models import Word2Vec, Doc2Vec
+from spacy import Language
 
 
-class BertIdiomifier(torch.nn.Module):
+class Idiomifier:
+    def __init__(self, nlp: Language, idiom_keys: List[str]):
+        self.nlp = nlp
+        self.idiom_keys = idiom_keys  # make sure they are available keys.
+
+    def __call__(self, phrase: str) -> List[Tuple[str, float]]:
+        raise NotImplementedError
+
+    def to_tokens(self, phrase: str) -> List[str]:
+        # refine the phrase
+        return [
+            token.lemma_  # lemmatise it
+            for token in self.nlp(phrase)
+            if not token.is_stop
+            if not token.is_punct
+            if not token.like_num
+        ]
+
+
+class Doc2VecIdiomifier(Idiomifier):
     """
-    try this with Sentence BERT for encoding a sentence.
-    https://arxiv.org/abs/1908.10084
+    use infer_vector method to get the vector representation as a whole!
     """
-    def __init__(self, bert_embed_size: int, idiom2vec_embed_size: int,
-                 bert_model: Optional[BertModel] = None):
-        """
-        :param bert_model: (pretrained) bert model to be used for encoding a phrase (sentence)
-        :param idiom2vec_embed_size: should be the same as the output of idiom2vec model.
-        """
-        super().__init__()
-        self.bert_embed_size = bert_embed_size
-        self.idiom2vec_embed_size = idiom2vec_embed_size
-        self.bert_model = bert_model  # sentence encoder layer
-        self.linear = torch.nn.Linear(bert_embed_size, idiom2vec_embed_size)  # projection layer
 
-    def forward(self, X_batch: torch.Tensor) -> torch.Tensor:
-        """
-        :param X_batch: (N, 3, M). 3 dimensional tensor. column 0: token ids, column 1: token type,
-         column 3: pos encoding.
-        :return:
-        """
-        X_token_ids = X_batch[:, 0]
-        X_token_type_ids = X_batch[:, 1]
-        X_attention_mask = X_batch[:, 2]
-        # forward pass to the bert module
-        outs = self.bert_model(input_ids=X_token_ids,
-                               attention_mask=X_attention_mask,
-                               token_type_ids=X_token_type_ids)
-        # idx = 0: token_hidden, 1: cls_hidden
-        Y1_cls_hiddens = outs[1]  # (N, bert_embed_size)
-        Y2_embeddings = self.linear.forward(Y1_cls_hiddens)  # (N, idiom2vec_embed_size)
-        return Y2_embeddings
+    def __init__(self, nlp: Language, idiom_keys: List[str], idiom2vec_dv: Doc2Vec):
+        super().__init__(nlp, idiom_keys)
+        self.idiom2vec_dv = idiom2vec_dv
 
-    # this is for inference.
-    def idiomify(self, phrase: str,
-                 bert_tokenizer: BertTokenizer,
-                 idionly2vec: KeyedVectors) -> List[Tuple[str, float]]:
+    def __call__(self, phrase: str) -> List[Tuple[str, float]]:
+        tokens = self.to_tokens(phrase)
+        phrase_vector = self.idiom2vec_dv.infer_vector(tokens)  # use value from model init
+        sim_to_idioms = self.idiom2vec_dv.wv.distances(phrase_vector, self.idiom_keys)
+        sims = list(zip(self.idiom_keys, sim_to_idioms))
+        return sorted(sims, key=lambda x: x[1], reverse=True)
+
+
+class Word2VecIdiomifier(Idiomifier):
+    """
+    make sure you do this with tfidf model.
+    """
+    def __init__(self, nlp: Language, idiom_keys: List[str], idiom2vec_wv: Word2Vec):
+        super().__init__(nlp, idiom_keys)
+        self.idiom2vec_wv = idiom2vec_wv
+
+    def __call__(self, phrase: str) -> List[Tuple[str, float]]:
         """
-        given a query, this returns idioms that best match the phrase.
+        idiomify the phrase with a pretrained word2vec.
         :param phrase:
-        :param bert_tokenizer:
-        :param idionly2vec:
-        :return:
+        :return: a list of tuples. [idiom, score]
         """
-        X = encode_phrase(phrase, bert_tokenizer)
-        phrase_vector = torch.squeeze(self.forward(X)).detach().numpy()
-        idiom2sim = idionly2vec.similar_by_vector(phrase_vector)
-        return idiom2sim
+        tokens = self.to_tokens(phrase)
+        # correlations between the sets.
+        sim_to_idioms = [
+            self.idiom2vec_wv.wv.n_similarity(tokens, [idiom_key])
+            for idiom_key in self.idiom_keys
+        ]
+        sims = list(zip(self.idiom_keys, sim_to_idioms))
+        return sorted(sims, key=lambda x: x[1], reverse=True)
