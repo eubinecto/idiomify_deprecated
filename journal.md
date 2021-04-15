@@ -326,3 +326,26 @@ warnings.warn(msg)
 0.00036656891495601173
 ```
 
+
+
+## 15th of April
+
+로스가 줄어들지 않는다. 음...
+Why is that?
+
+Pre-training을 미리 했어야 했을수도. BERT에 대한 제대로 된 이해가 없었다. 
+이 부분은, 
+이게 되는가..? 
+
+로스함수가..., 로스함수가 문제인건가? 아니, pre-training이 필요한 면이 있을 것. 
+
+
+BERT로 구현은 일단 포기하고. word2vec으로 하자.
+this will be managable.
+
+일단 지금까지 해온건.. feature branch에 저장해두고. 나중에 할 수 있으면 돌아오기.
+
+역시, keep it simple. start simple. Don't start with a moon shot. You'd end up wasting your time.
+
+
+
