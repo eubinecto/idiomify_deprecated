@@ -31,7 +31,7 @@ def main():
     parser.add_argument('--idiom2vec_embed_size',
                         type=int,
                         # this is what I set for idiom2vec, for now.
-                        default=100)
+                        default=200)
     # the size of the batch to compute the loss for
     parser.add_argument('--batch_size',
                         type=int,
@@ -67,7 +67,6 @@ def main():
     # --- prepare the dataset --- #
     sent_bert_tokenizer = BertTokenizer.from_pretrained(args.bert_model_name)
     def2embed_train = TsvTuplesLoader().load(args.def2embed_train_path)
-    def2embed_test = TsvTuplesLoader().load(args.def2embed_test_path)
     defs_train = [def_ for def_, _ in def2embed_train]
     embeds_train = [embed for _, embed in def2embed_train]
     # torch TensorDataset
@@ -84,7 +83,6 @@ def main():
                                 bert_embed_size=args.bert_embed_size,
                                 idiom2vec_embed_size=args.idiom2vec_embed_size)
     idiomifier = idiomifier.to(device)  # transfer the net to cuda/cpu.
-    idionly2vec = KeyedVectors.load_word2vec_format(args.idionly2vec_kv_path, binary=False)
 
     # --- prepare the optimizer & loss --- #
     adam_optim = torch.optim.Adam(idiomifier.parameters(), lr=args.learning_rate)  # we use adam optimizer
