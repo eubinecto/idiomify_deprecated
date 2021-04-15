@@ -35,6 +35,7 @@ TARGET_IDIOMS_TXT = SLIDE_DIR.joinpath("target_idioms.txt")  # just a list of ta
 
 # files - idiom2vec
 IDIOM2VEC_MODEL = IDIOM2VEC_DIR.joinpath("idiom2vec_001.model")
+IDIONLY2VEC_KV = IDIOM2VEC_DIR.joinpath("idionly2vec_001.kv")
 TARGET_EMBEDDINGS_TSV = IDIOM2VEC_DIR.joinpath("target_embeddings.tsv")  # (idiom, embeddings)
 
 # files - def2embed

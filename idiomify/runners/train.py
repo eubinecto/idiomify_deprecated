@@ -2,13 +2,17 @@
 the python script for training an idiomifier.
 
 """
+from typing import Tuple, List
+from gensim.models import KeyedVectors
 from transformers import BertModel, BertTokenizer
 from idiomify.idiomifiers import BertIdiomifier
 from idiomify.datasets import Def2EmbedDataset
 from idiomify.loaders import TsvTuplesLoader
+from idiomify.losses import cosine_sim
 from torch.utils.data import DataLoader
 import torch
 import argparse
+import numpy as np
 from tqdm import tqdm
 
 
@@ -38,19 +42,19 @@ def main():
     parser.add_argument('--learning_rate',
                         type=float,
                         default=1e-5)
+    parser.add_argument('--loss_fn',
+                        type=str,
+                        default='cosine_sim')
     # number of workers to use for loading data.
     parser.add_argument('--num_workers',
                         type=int,
-                        default=4)
-    parser.add_argument('--log_dir',
-                        type=str,
-                        default="../data/idiomifier/idiomifier_s_bert_001_log")
+                        default=1)
     # the path to the training data
-    parser.add_argument('--def2embed_path',
+    parser.add_argument('--def2embed_train_path',
                         type=str,
                         default="../data/def2embed/def2embed_train.tsv")
     # the path to save the model
-    parser.add_argument('--model_path',
+    parser.add_argument('--save_path',
                         type=str,
                         default="../data/idiomifier/idiomifier_s_bert_001.model")
     args = parser.parse_args()
@@ -62,7 +66,8 @@ def main():
 
     # --- prepare the dataset --- #
     sent_bert_tokenizer = BertTokenizer.from_pretrained(args.bert_model_name)
-    def2embed_train = TsvTuplesLoader().load(args.def2embed_path)
+    def2embed_train = TsvTuplesLoader().load(args.def2embed_train_path)
+    def2embed_test = TsvTuplesLoader().load(args.def2embed_test_path)
     defs_train = [def_ for def_, _ in def2embed_train]
     embeds_train = [embed for _, embed in def2embed_train]
     # torch TensorDataset
@@ -73,25 +78,28 @@ def main():
                                       num_workers=args.num_workers,
                                       shuffle=True)
 
-    # --- prepare the model --- #
+    # --- prepare the models --- #
     sent_bert = BertModel.from_pretrained(args.bert_model_name)  # load a pretrained model
     idiomifier = BertIdiomifier(bert_model=sent_bert,
                                 bert_embed_size=args.bert_embed_size,
                                 idiom2vec_embed_size=args.idiom2vec_embed_size)
     idiomifier = idiomifier.to(device)  # transfer the net to cuda/cpu.
+    idionly2vec = KeyedVectors.load_word2vec_format(args.idionly2vec_kv_path, binary=False)
 
     # --- prepare the optimizer & loss --- #
-    adam_optim = torch.optim.Adam(idiomifier.parameters(),
-                                  lr=args.learning_rate)  # we use adam optimizer
-    cos = torch.nn.CosineSimilarity(dim=1, eps=1e-6)  # for now, use simple cosine sim.
+    adam_optim = torch.optim.Adam(idiomifier.parameters(), lr=args.learning_rate)  # we use adam optimizer
+    if args.loss_fn == "cosine_sim":
+        loss_fn = cosine_sim
+    else:
+        raise ValueError("Invalid loss function:" + args.loss_fn)
 
     # --- prepare a timer --- #
     # https://eehoeskrap.tistory.com/462
-    start = torch.cuda.Event(enable_timing=True)
-    end = torch.cuda.Event(enable_timing=True)
+    # start = torch.cuda.Event(enable_timing=True)
+    # end = torch.cuda.Event(enable_timing=True)
 
     # --- train the model --- #
-    start.record()  # record start time
+    # start.record()  # record start time
     idiomifier.train()  # put the model in a training mode
     for epoch in tqdm(range(args.epochs)):
         for batch_idx, batch in enumerate(tqdm(def2embed_dataloader)):
@@ -102,21 +110,23 @@ def main():
             Y = Y.to(device)
             # forward pass
             Y_hat = idiomifier.forward(X_batch)  # predicted value
-            loss = torch.sum(1 - cos(Y, Y_hat))  # sum up all the loss for this batch
-            print("epoch: {}, batch: {}, loss: {}".format(epoch, batch_idx, loss.item()))
+            # --- eval metrics: loss, --- #
+            running_loss = loss_fn(Y, Y_hat)  # compute the loss
+            print("epoch: {}, batch: {}, loss: {}".format(epoch, batch_idx, running_loss.item()))
             # reset the gradients
             # this is to clear the buffer
             adam_optim.zero_grad()
             # backward propagation; backward gradients are computed
-            loss.backward()
+            running_loss.backward()
             # update the weights with gradient descent
             adam_optim.step()
-    end.record()  # record end time
-    torch.cuda.synchronize()  # Waits for everything to finish running
-    print("training took:", start.elapsed_time(end))  # print the time it took to train the model.
+    # end.record()  # record end time
+    # torch.cuda.synchronize()  # Waits for everything to finish running
+    # print("training took:", start.elapsed_time(end))  # print the time it took to train the model.
     # then save the model
     # will this save the idioms as well?
-    torch.save(idiomifier.state_dict(), args.model_path)
+    torch.save(idiomifier.state_dict(), args.save_path)
+    # TODO save meta data of the model as json (dictionary)
 
 
 if __name__ == '__main__':

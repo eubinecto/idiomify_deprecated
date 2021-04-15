@@ -288,3 +288,41 @@ I had a problem where... apt install cuda won't work.
 using aptitude fixed the problem.
   
 
+Now, I have to have some evaluation metric to track the training progress.
+
+
+학습하는 것보다.. 테스팅을 하는 것이 더 오래 걸리면 ㅋㅋㅋㅋ 안되는데.. 음...
+
+
+idiom2vec 모델을 뭣하러 가져오는 거지? 어치피...... target_embeddings가 있는데 말이지?
+
+이걸.. 내일 수정을 해보자. 목표는 evaluation 속도를 높이는 것... 아무리 생각해봐도 지금은 너무 느려... ㅇㅇ.
+배치 10개마다 하는게 맞을 듯. 애초에... 10000개를 돌고. 각 10000개 별로 2500개 루프를 또 돌아야 하니 말이지.
+오래 걸릴만함. 거기에다가 maximum sorting도 진행하니.. 그래 그럴만 하지.
+
+
+로스함수 - 피어슨 유사도도 사용가능할까? - 두 벡터 사이의 유사도는 전부 사용해보는게 중요할 것.
+ - 어떤 로스함수를 사용해야하나?
+ - 이것에 대한 실험이 필요할 것.
+
+
+데이터 수집도 더 해보아야 한다.
+
+
+알고있는 지식이란 지식은 다 활용해야 한다.
+나중에 - Knowledge Distillation도 적용하면 굿일듯!! -> serving을 하기 위해서.
+그 라이브러리를 활용하면 될것.
+
+나중에 bert pos pretrained도. feature engineering을 위해 사용해볼 것.
+
+
+> 001 버전 test accuracy:
+```commandline
+before it was trained
+
+trained
+warnings.warn(msg)
+100%|██████████| 2728/2728 [03:24<00:00, 13.35it/s]
+0.00036656891495601173
+```
+
