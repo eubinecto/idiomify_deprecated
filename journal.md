@@ -386,4 +386,5 @@ surprise_surprise 0.35314885
 1. doc2vec training - 001.
 2. tfidf (collocation) 
 
-
+What you need here, is a reliable evaluation metric!
+Get the definitions for each idiom, and evaluate the rank. (are there any reliable measure for this?).

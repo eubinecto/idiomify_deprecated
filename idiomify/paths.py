@@ -4,12 +4,19 @@ from os import path
 HOME_DIR = path.expanduser("~")
 DATA_DIR = path.join(HOME_DIR, 'data')
 CORPORA_DIR = path.join(HOME_DIR, "corpora")  # this is always at home.
-PROJECT_DATA_DIR = path.join(DATA_DIR, "data_idiomify")
-IDIOM2VEC_DIR = path.join(PROJECT_DATA_DIR, "idiom2vec")
+IDIOMS_DIR = path.join(CORPORA_DIR, "idioms")
+DATA_IDIOM2VEC_DIR = path.join(DATA_DIR, "data_idiom2vec")
+IDIOM2VEC_DIR = path.join(DATA_IDIOM2VEC_DIR, "idiom2vec")
 
 # idiom2vec
 IDIOM2VEC_WV_001_BIN = path.join(IDIOM2VEC_DIR, "idiom2vec_wv_001.bin")
-IDIOM2VEC_DV_001_BIN = path.join(IDIOM2VEC_DIR, "idiom2vec_dv_001.bin")
+IDIOM2VEC_WV_002_BIN = path.join(IDIOM2VEC_DIR, "idiom2vec_wv_002.bin")
+IDIOM2VEC_WV_003_BIN = path.join(IDIOM2VEC_DIR, "idiom2vec_wv_003.bin")
+IDIOM2VEC_WV_004_BIN = path.join(IDIOM2VEC_DIR, "idiom2vec_wv_004.bin")
+
+# idioms
+IDIOM2DEFS_CSV = path.join(IDIOMS_DIR, "idiom2defs.csv")
+
 
 # spacy
 NLP_MODEL = "en_core_web_sm"
