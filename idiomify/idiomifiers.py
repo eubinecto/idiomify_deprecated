@@ -2,7 +2,6 @@
 Will experiment with different models.
 """
 from typing import List, Tuple
-
 import numpy as np
 from gensim.models import Word2Vec
 from spacy import Language

@@ -10,7 +10,8 @@ from gensim.models import Word2Vec
 from identify_idioms.service import load_idioms
 from spacy import load
 from idiomify.idiomifiers import Word2VecIdiomifier
-from idiomify.paths import IDIOM2VEC_WV_001_BIN, IDIOM2VEC_WV_002_BIN, NLP_MODEL
+from idiomify.paths import IDIOM2VEC_WV_001_BIN, IDIOM2VEC_WV_002_BIN, NLP_MODEL, IDIOM2VEC_WV_003_BIN, \
+    IDIOM2VEC_WV_004_BIN
 from idiom2collocations.loaders import load_idiom2colls, load_lemma2idfs
 import logging
 from sys import stdout
@@ -30,10 +31,10 @@ def display_results(phrase: str, results: List[Tuple[str, float]], colls_mode: s
         ]
         if colls:
             row += [
-                colored(str(idiom2colls[idiom][0][:5]), color='yellow'),
-                colored(str(idiom2colls[idiom][1][:5]), color='blue'),
-                colored(str(idiom2colls[idiom][2][:5]), color='magenta'),
-                colored(str(idiom2colls[idiom][3][:5]), color='cyan')
+                colored(str([lemma for lemma, _ in idiom2colls[idiom][0][:4]]), color='yellow'),
+                colored(str([lemma for lemma, _ in idiom2colls[idiom][1][:4]]), color='blue'),
+                colored(str([lemma for lemma, _ in idiom2colls[idiom][2][:4]]), color='magenta'),
+                colored(str([lemma for lemma, _ in idiom2colls[idiom][3][:4]]), color='cyan')
             ]
         else:
             row += []*4
@@ -44,9 +45,13 @@ def display_results(phrase: str, results: List[Tuple[str, float]], colls_mode: s
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--phrase",
+    parser.add_argument("--synonyms",
                         type=str,
-                        default="a dilemma or a difficult situation")
+                        # def for fair and square
+                        # the more words you give it, the better the result will be.
+                        # generally, you should provide more than 3 words.
+                        # the more consistent the better the results will be.
+                        default="wait, excitedly, anxiously, hopefully")
     parser.add_argument("--phrase_vector_mode",
                         type=str,
                         default="avg")
@@ -55,7 +60,7 @@ def main():
                         default="002")
     parser.add_argument("--colls_mode",
                         type=str,
-                        default="pmi")
+                        default="tfidf")
     parser.add_argument("--top_n",
                         type=int,
                         default=10)
@@ -65,6 +70,10 @@ def main():
         idiom2vec = Word2Vec.load(IDIOM2VEC_WV_001_BIN)
     elif args.idiom2vec_ver == "002":
         idiom2vec = Word2Vec.load(IDIOM2VEC_WV_002_BIN)
+    elif args.idiom2vec_ver == "003":
+        idiom2vec = Word2Vec.load(IDIOM2VEC_WV_003_BIN)
+    elif args.idiom2vec_ver == "004":
+        idiom2vec = Word2Vec.load(IDIOM2VEC_WV_004_BIN)
     else:
         raise ValueError
 
@@ -78,6 +87,7 @@ def main():
         # only if the model has seen the idiom.
         if idiom2vec.wv.key_to_index.get(idiom.replace(" ", "_"), None)
     ]
+
     # get the idfs
     lemma2idfs = list(load_lemma2idfs())
     verb2idf = dict(map(lambda x: (x[0], x[1]), lemma2idfs))
@@ -90,10 +100,10 @@ def main():
     idiomifier = Word2VecIdiomifier(nlp, idiom_keys, idiom2vec, idfs)
 
     # --- idiomify the phrase --- #
-    results = idiomifier(args.phrase, mode=args.phrase_vector_mode)[:args.top_n]
+    results = idiomifier(args.synonyms, mode=args.phrase_vector_mode)[:args.top_n]
 
     # --- show the result --- #
-    display_results(args.phrase, results, args.colls_mode)
+    display_results(args.synonyms, results, args.colls_mode)
 
 
 if __name__ == '__main__':
