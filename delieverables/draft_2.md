@@ -2,41 +2,60 @@
 # Idiomify: Building a collocation-supplemented reverse-dictionary of idioms with Word2Vec for L2 learners
 - author: Eu-Bin KIM
 - the deadline is today. By 12pm. That is a hard deadline.
-- expected word count: 10000.
- - intro: 0, 0, 0
- - methods: 0, 0, 0
- - results & discussions: 0, 0, 0
+- expected word count: more or less 10000.
 - write as much as you can. That's the goal
-- keep it simple.. right?
+- keep it simple.
 
 
 ## Table of Contents
 0. Abstract (500)
 1. The Aim (450)
-2. Motivations : why do we need Idiomify? (2000)
-   - why build a reverse-dictionary of idioms? (1200)
-   - why supplement it with collocations of idioms? (1200)
-   - objectives. (400)
-3. Methods & Justifications: How was Idiomify built? (3500)
+2. Motivations : why do we need Idiomify? (1500)
+   - why build a reverse-dictionary of idioms? (700)
+      - paragraph 1 (350) Because it helps L2 learners.
+        - for L1: solves tip-of-the-tongue problem.
+        - for L2: the tongue is not even on the tip.   
+      - paragraph 2 (350) People have built reverse-dictionaries, but there are none for idioms.
+   - why supplement the results with collocations of idioms? (700)
+      - paragraph 1 (350) Because it helps L2 learners.
+      - paragraph 2 (350) There are collocations for words, but there are none for idioms.
+   - objectives. (200)
+3. Methods & Justifications: How was Idiomify built? (4000)
    - Identifying idioms
      - what & why?
-     - how?  
+     - how?
+     - how? - evaluate?  
    - Preprocessing data
      - what & why?
      - how?
    - Training Idiom2Vec
-     - what &
+     - what & why?
+     - how?
+     - how? - evaluate?   
    - Suggesting idioms with Idiom2Vec
    - Modeling & Extracting Collocations of idioms
-4. Results & Analysis: How could we improve Idiomify? (3500)
+4. Results & Analysis: How could we improve Idiomify? (4000)
+   - collocations of idioms
+     - the results. (600)
+     - the   
+     - limitations? (600)
+     - how could we overcome? (600)  
+   - idiom2vec
+     - results & good side. (600)
+     - limitations?
+     - how could we overcome?  
+   - idiomify 
+     - results & good side. (600)
+     - limitations? (600)
+     - how could we overcome? (600)
+   
 5. Conclusion (300)
 6. References (300)
 
 
 ## Abstract
 
-- conclusion: "Learner's Dictionary of collocations of idios"
-  solves tip-of-the-tongue problem, and helps L2 learners use idioms precisely and naturally.
+> What is your conclusion? Keep it simple!
   
 
 ## 1. The aim (450)
@@ -46,25 +65,25 @@
 
 > What is the aim of the project? (220)
 
-**Building a collocation-supplemented reverse-dictionary of idioms, namely Idiomify, is the controlling aim of the project.**
-Idiomify attempts to suggest a list of idioms that best describe a given set of words, while supplementing the results with collocations of the idioms. 
+**Idiomify aims to suggest a list of idioms that best describe a given set of words to second language learners (i.e. L2 learners), 
+while supplementing the results with collocations of the idioms.**
 **Figure 1** illustrates this with an example scenario. Say we write *They are waiting excitedly, anxiously and hopefully to see the results* to describe
-  the people in the images above. Although the sentence does get the idea across, we may wonder how we could paraphrase the sentence with an
-  idiom, if there is any. We therefore give a set of three words as the input to Idiomify: *excitedly*, *anxiously* and *hopefully*.
-  Given the input, Idiomify suggests *with bated breath*, *hold one's breath* and *don't hold your breath* as some idioms that 
-  may encompass the meaning of the three words, of which *with bated breath* is found to be the most appropriate one.
-  We therefore rephrase our sentence to *They are waiting with bated breath to see the results*. From the list of
-  verb collocates of the idiom, however, we see that *with bated breath* collocates with the verbs *watch* and *whisper*. 
-Because the people in the pictures are indeed watching something and possibly whispering amongst them, we revise our sentence to
-*They are waiting, watching and whispering with bated breath*. 
+  the people in the images above. Assuming we are L2 learners of English (e.g. a native Korean learning English), we may wonder how the sentence could be paraphrased with an
+  English idiom, if there is any. We therefore give a set of three words as the input to Idiomify: *excitedly*, *anxiously* and *hopefully*.
+  Given the input, Idiomify suggests *with bated breath*, *hold one's breath* and *don't hold your breath* as the idioms that 
+  are likely to capture the meaning of the three words, of which *with bated breath* is found to be the most appropriate one.
+  We thereby learn to rephrase the sentence to *They are waiting with bated breath to see the results*. We are also informed 
+that *with bated breath* collocates with *watch* and *whisper*, from the list of the verb collocates of the idiom.
+We indeed notice that the people in the pictures are watching something and possibly whispering amongst them. We therefore learn to revise
+our first try into a more precise and communicative one: *They are waiting, watching and whispering with bated breath*. 
 
 > What is the aim of this report? ( < 200)
 
-**This report aims to why we need it Idiomify, how it has been built and how we could improve it.**
-- section 2 - the motivations. (why?)
+**This report aims to expand on why L2 learners would need a reverse-dictionary as such, how Idiomify was built for it and how we could further improve Idiomify.**
+- section 2 - the motivations. (why?) explains why Idiomify could be useful for Second Language Learners (e.g. a Korean trying to learn English)
   - why build a reverse-dictionary of idioms?
   - why supplement it with collocations of idioms?  
-- section 3 - the methods. (how?)  
+- section 3 - the methods. (how?)  explains how the 
   - how do we build a reverse-dictionary of idioms?
     - related work?
     - so how are we doing it?  
