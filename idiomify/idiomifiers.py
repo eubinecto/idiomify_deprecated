@@ -61,6 +61,11 @@ class Word2VecIdiomifier(Idiomifier):
             self.idiom2vec_wv.wv.get_vector(lemma)
             for lemma, _ in avail_lemma2pos
         ]
+        if len(token_vectors) == 0:
+            # a placeholder
+            print("no tokens")
+            return None
+
         if mode == "sum":
             return np.array(token_vectors).sum(axis=0)
         elif mode == "avg":

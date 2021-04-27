@@ -15,7 +15,8 @@ IDIOM2VEC_WV_003_BIN = path.join(IDIOM2VEC_DIR, "idiom2vec_wv_003.bin")
 IDIOM2VEC_WV_004_BIN = path.join(IDIOM2VEC_DIR, "idiom2vec_wv_004.bin")
 
 # idioms
-IDIOM2SYNS_CSV = path.join(IDIOMS_DIR, 'idiom2syns.csv')
+IDIOM2DEF_TSV = path.join(IDIOMS_DIR, 'idiom2def.tsv')
+IDIOM2SYNS_TSV = path.join(IDIOMS_DIR, 'idiom2syns.tsv')
 
 # spacy
 NLP_MODEL = "en_core_web_sm"

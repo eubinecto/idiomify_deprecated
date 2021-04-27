@@ -376,11 +376,9 @@ get_one's_head_around 0.35432136
 surprise_surprise 0.35314885
 
 ```
-
 가능성이 보인다. 이미 definition도 있으므로, evaluation도 가능할 것.
 다음으로 doc2vec, tfidf를 훈련하자. 어차피 collocation을 구하기 위해 각 idiom에 대한 tfidf도 구하게 될것이므로.
 그걸 한번 해보자고.
-
 
 다음으로 필요한건.
 1. doc2vec training - 001.
@@ -388,3 +386,33 @@ surprise_surprise 0.35314885
 
 What you need here, is a reliable evaluation metric!
 Get the definitions for each idiom, and evaluate the rank. (are there any reliable measure for this?).
+
+
+## 26th of April (Mon)
+- [ ] Refine the related work section.
+- [ ] Build the test set.  
+- [ ] We must settle on the results.
+  - with svd, without svd. 
+  - more robust test set. (just test things with the definition. We don't want any bias here).
+  
+
+## 27th of April (Tue)
+- [ ] Refine the Results section, with the results now you have.
+- [ ] Complete the related work part now.
+
+
+## 28th of April (Wed)
+- To do. rank으로 evaluation 하기.
+- 왜 전반적으로 performance가 좋지 않은가?에 대한 설명.
+- 그럼 어떻게 improve를 할 수 있는가. 
+- essay에 끝이 없구나.
+
+
+## 29th of April (Thu)
+- 
+
+## 30th of April (Fri)
+
+
+
+

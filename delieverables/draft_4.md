@@ -1,3 +1,5 @@
+
+
 # Idiomify: Building a collocation-supplemented reverse-dictionary of idioms with Word2Vec for L2 learners of English
 
 
@@ -12,13 +14,17 @@
 3. **Related Work** (2400)
    1. Building a reverse dictionary of idioms (600)
       1. why are we doing this? - we've just discussed in the previous section. (100)
+         but there are 
       2. how have others done it? (250)
       3. how would you do it and why?  (250)
    2. Vectorizing idioms (600)
       1. why are we doing this?
          - link back to the first. 
       2. how have others done it?
+         - What is Word2Vec?
+           - what, why and how? 
       3. how would you do it and why?
+         - we will
    3. Modeling Collocations (600)
       1. why are we doing this? (100)
       2. how have others done it? (250)
@@ -83,38 +89,58 @@
 
 > What is the aim of the project? (220)
 
-**Project Idiomify aims to suggest a list of idioms that best describe a given set of words to second language learners (i.e. L2 learners), 
+**Project Idiomify aims to suggest a list of idioms that best describe a given phrase to second language learners, 
 while supplementing the results with collocations of the idioms.**
-**Figure 1** illustrates this with an example scenario. Say we write *They are waiting excitedly, anxiously and hopefully to see the results* to describe
-  the people in the images above. If we were L2 learners of English (e.g. a native Korean learning English), we may wonder how the sentence could be paraphrased with an
-  English idiom, if there is any. We therefore give a set of three words as the input to Idiomify: *excitedly*, *anxiously* and *hopefully*.
+**Figure 1** illustrates how we might use Idiomify with an example scenario. Say we write *They are waiting excitedly, anxiously and hopefully to see the results* to describe
+  the people in the images above. If we were learning English as a second language (e.g. a native Korean learning English),
+we may want to explore how the sentence could be paraphrased with an English idiom, if there is any (more on this reason will be discussed in the section **2.1**).
+We therefore give the phrase as the input to Idiomify: *excitedly, anxiously and hopefully*.
   Given the input, Idiomify suggests *with bated breath*, *hold one's breath* and *don't hold your breath* as the idioms that 
-  are likely to capture the meaning of the three words, of which *with bated breath* is found to be the most appropriate one.
-  We thereby learn to rephrase the sentence to *They are waiting with bated breath to see the results*. We are also informed 
-that *with bated breath* collocates with *watch* and *whisper*, from the list of the verb collocates of the idiom.
-We indeed notice that the people in the pictures are watching something and possibly whispering their wishful thinking. We therefore learn to revise
-our first try into a more precise and communicative one: *They are waiting, watching and whispering with bated breath*. 
+  are most likely to capture the meaning of the phrase, of which *with bated breath* is found to be the most appropriate one.
+  We thereby learn to rephrase the sentence to *They are waiting with bated breath to see the results*. 
+As being second language learners, we may also wonder how we could use *with bated breath* more adequately than the first try (more on this reason will be discussed in 
+the section **2.2**). Here, consulting "verb collocates" helps us in doing so. That is, we see that *with bated breath* collocates with *watch* and *whisper*, and we 
+indeed notice that the people in the pictures are watching something while possibly whispering their wishful thinking. We therefore learn to revise
+the first try into a more precise and communicative one: *They are waiting, watching and whispering with bated breath*. 
 
-> What is the controlling idea of this report then? ( < 200)
+> What is the controlling idea of this report then? (200)
 
-**This report expands on why L2 learners would need a reverse dictionary as such, how Idiomify was built for this and how we could further improve Idiomify.**
-- section 2 - the motivations. (why?) explains why Idiomify could be useful for Second Language Learners (e.g. a Korean trying to learn English)
-  - why build a reverse-dictionary of idioms?
-  - why supplement it with collocations of idioms?  
-- section 3 - the methods. (how?)  explains how the 
-  - how do we build a reverse-dictionary of idioms?
-    - related work?
-    - so how are we doing it?  
-  - how do we extract collocations of idioms from corpora?  
-    - related work?
-    - so how are we doing it?
-- Section 4 - the results and discussions (improvements?)  
-- Note: *We come back to this part later*. Make sure to sum of the conclusion here.
-- sum up the why, how, and improve part (what have you learned?), As will be discussed in the following sections,
-We discuss limits.. and further argue that... (put the conclusion of this essay here.)!
+**This report expands on why L2 learners would need a reverse dictionary with collocations as such,
+how Idiomify was built for this and how we could further improve Idiomify.**
+-  **Motivations : why do we need Idiomify?** (1400)
+-  **Related Work** (2400)
+-  **Implementation and Results: How was Idiomify built?** (4000)
+-  **Limits and Analysis: How could we improve Idiomify?** (4000)
 
+- motivations
+- Methods
+  - building a reverse dictionary of idioms
+  - modeling & extracting collocations  
+- Results & Improvements
+  - The reverse dictionary
+    - demonstration
+    - evaluation  
+  - The collocations
+    - demonstration
+    - evaluation
 
 ---
+
+\begin{table}[]
+\begin{tabular}{l|l|llllll}
+\hline
+\multirow{2}{*}{idiom}                                & \multirow{2}{*}{frequency} & \multicolumn{5}{l}{collocations}                                                                                                                    & \multirow{2}{*}{use cases}                                                                                                                                                                                           \\ \cline{3-7}
+                                                      &                            & model                      & verb                               & noun                      & adj                       & adv                       &                                                                                                                                                                                                                      \\ \hline
+\multicolumn{1}{|l|}{\multirow{3}{*}{from\_a\_to\_z}} & \multirow{3}{*}{1}         & \multicolumn{1}{l|}{tf}    & \multicolumn{1}{l|}{(scan, 2)}     & \multicolumn{1}{l|}{None} & \multicolumn{1}{l|}{None} & \multicolumn{1}{l|}{None} & \multicolumn{1}{l|}{\multirow{3}{*}{\begin{tabular}[c]{@{}l@{}}He knew his subject from A to Z.\\ This book tells the story of her life from A to Z.\\ The book is titled "Home Repairs From A to Z."\end{tabular}}} \\ \cline{3-7}
+\multicolumn{1}{|l|}{}                                &                            & \multicolumn{1}{l|}{tfidf} & \multicolumn{1}{l|}{(scan, 1.0)}   & \multicolumn{1}{l|}{None} & \multicolumn{1}{l|}{None} & \multicolumn{1}{l|}{None} & \multicolumn{1}{l|}{}                                                                                                                                                                                                \\ \cline{3-7}
+\multicolumn{1}{|l|}{}                                &                            & \multicolumn{1}{l|}{pmi}   & \multicolumn{1}{l|}{(scan, 15.65)} & \multicolumn{1}{l|}{None} & \multicolumn{1}{l|}{None} & \multicolumn{1}{l|}{None} & \multicolumn{1}{l|}{}                                                                                                                                                                                                \\ \hline
+\multicolumn{1}{|l|}{\multirow{3}{*}{}}               & \multirow{3}{*}{}          & \multicolumn{1}{l|}{}      & \multicolumn{1}{l|}{}              & \multicolumn{1}{l|}{}     & \multicolumn{1}{l|}{}     & \multicolumn{1}{l|}{}     & \multicolumn{1}{l|}{\multirow{3}{*}{}}                                                                                                                                                                               \\ \cline{3-7}
+\multicolumn{1}{|l|}{}                                &                            & \multicolumn{1}{l|}{}      & \multicolumn{1}{l|}{}              & \multicolumn{1}{l|}{}     & \multicolumn{1}{l|}{}     & \multicolumn{1}{l|}{}     & \multicolumn{1}{l|}{}                                                                                                                                                                                                \\ \cline{3-7}
+\multicolumn{1}{|l|}{}                                &                            & \multicolumn{1}{l|}{}      & \multicolumn{1}{l|}{}              & \multicolumn{1}{l|}{}     & \multicolumn{1}{l|}{}     & \multicolumn{1}{l|}{}     & \multicolumn{1}{l|}{}                                                                                                                                                                                                \\ \hline
+\end{tabular}
+\end{table}
+
+
 
 ## 2. Motivations
 
@@ -124,18 +150,14 @@ We discuss limits.. and further argue that... (put the conclusion of this essay 
 
 > Why are we building a reverse dictionary? (250)   
 
-**L2 learners frequently suffer from Tip-of-the-Tongue phenomenon.**
-- what is tip-of-the-tongue problem?
-  - "the feeling of imminent retrieval"
-  - give a concrete examples (scenario) from: *Tip-of-the-tongue (TOT) states: retrieval, behavior, and experience* (Schwartz & Metcalfe, 2011)
-  - also, another concrete example from a different source. 
-- also, this is especially helpful for L2 learners, Since "Bilinguals have more tip-of-the-tongue (TOT) incidents than monolinguals."
- - from: *Tip-of-the-tongue in a second language: The effects of brief first-language exposure and long-term use*  
-- wait, but this is just a fact.
-- what is the reason you wanted to build this? Because I don't know much about idioms to begin with!
-- the narrative should be: reverse-dictionary is typically built to solve TOT states, but
+alright.. I'll come back to this later.
 
-(An evidence that shows L2 learners improficiency in idioms.)
+**We build a reverse dictionary so as to help L2 learners explore new vocabularies on-demand.**
+- reverse dictionaries are typically known to solve Tip-of-the-tongue states.
+- that may be the case with L1 learners
+- but this is not necessarily the case for L2 learners; they don't have enough exposure to vocabularies to enter TOT state,
+  to begin with.
+- That's why L2 learners tend to be wordy, lengthy. They lack vocabulary.
 
 > Why are we building a reverse dictionary of idioms specifically? (250)
 
@@ -190,13 +212,14 @@ with the absence collocations of idioms, comes no guidance on natural and precis
 ### 3.1. Building a reverse dictionary of idioms
 
 > why are we doing this?
+> 
 **As exemplified in **Introduction** section, and as motivated in **Motivation** section, the main aim of Idiomify is
 to build a reverse dictionary of idioms.**
 
 
-![](.draft_4_images/dd7dc82a.png){width=400px}
-
 > how have others done it?
+![Search result for "statement that expresses my opinion" in OneLook.com](.draft_4_images/dd7dc82a.png){width=400px}
+
 **3 approaches have been done: inverted index, graphs,  distributional semantics**. 
 - the inverted index approach.
   - e.g. OneLook
@@ -208,11 +231,18 @@ to build a reverse dictionary of idioms.**
   - e.g. that paper (Cho) - LSTM +
 
 > how are you going to do it and why?
-**Idiomify takes the distributional semantics approach, but levarages Word2Vec only to establish a strong baseline.**.
-- We don't have extensive access to WordNet.
-- just average the word vectors, and use SVD.
+
+- (maybe show a diagram here!)
+
+**Idiomify takes the distributional approach but solely leverages Word2Vec.**
+- why? to push Word2Vec to its limits. How much can we get from distributional semantics, without inverted index, 
+  graphs and LSTM's?
+- why no graph-based approach? - we don't have "IdiomsNet", so this approach is not feasible.  
+- why not inverted index? - this is a completely viable approach, but w
+- why not use LSTM? why depend solely on Word2Vec? 
  - a great justification: *A simple but tough-to-beat baseline for sentence embeddings*.
-- e.g. in the case of
+- e.g. Revisit the situation in **Figure 1**. phrase_vector = takes an average of all the words, then apply svd.
+
 
 ### 3.2. Vectorizing idioms (600)
 > why are we doing this?
@@ -239,3 +269,7 @@ to build a reverse dictionary of idioms.**
       1. why are we doing this? (100)
       2. how have others done it? (250)
       3. how would you do this? (250)
+
+    
+### 3.4. Identifying idioms
+
