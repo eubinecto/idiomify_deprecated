@@ -50,35 +50,39 @@ care about that later. I've got to finish this first.
 ### Reverse-searching idioms
 > how did you evaluate it?
 - TABLE 1: a table of idiom/freq/def test set
-**by observing the dot product of the phrase vector and the target idiom vector.**
+**By averaging the ranks for the five groups.**
 - make note of the ranking measures - we can't use them here.
 - that should be the ground truth, but because it is constly to do so, we use a pseudo-eval metric here.  
 - make sure to give an example of how we are doing this.
 
-> what did you learn from the evaluations? : 1 
- 
-- TABLE 2: the performance over different idioms in TABLE  1 
+> what did you learn from the evaluations? 
 
-**from Table 1: As for  "stop idioms" - we can't handle them with distributional semantics approach** 
+> ![Performance of Idiomify by different frequency groups](.draft_5_images/07a4c0c8.png) 
+
+**The data indicates that...** 
 - stop idioms: e.g. the thing is, some kind of, you know what.
 - cite the graph...  
 - this could be mitigated with more complicated models. (e.g. LSTM, or BERT).
 
 > how could we improve upon this?: 1
 
-**Inverted index + distributional semantics approach**.
-
+**A mixture of distributed semantics approach & inverted index could **.
+- we could continue improving the baseline using weighted average of vectors and truncating with
+  SVD, as explained in "the formidable baseline" paper.
+- or even try using BERT, to get out of bow assumption. (the two BERT paper, which leverages of transfer learing.)   
+- but even if we do so, it seems apparent that distributional semantics approach alone is not a feasible solution.
+- what we need is a combination of inverted index & distributional semantics approach.
 
 > what did you learn from the evaluations? : 2
 
-> Idiom2Vec version | corpora | stopwords removal | lemmatisation | Avg target scores
+> Idiom2Vec version | corpora | stopwords removal | lemmatisation | Average ranks of the target idioms
 > --- | --- | --- | --- | --- 
-> V1| COCA (spok) | not removed | lemmatised | 0.1712
-> V2 | COCA (spok), Opensubtitles | not removed | lemmatised  | 0.2553
-> V3 | COCA (spok), Opensubtitles | removed | lemmatised | 0.2225
-> Table 3: Average scores over different versions of Idiom2Vec's. 
+> V1| COCA (spok) | not removed | lemmatised | 543.686
+> V2 | COCA (spok), Opensubtitles | not removed | lemmatised  | 494.9
+> V3 | COCA (spok), Opensubtitles | removed | lemmatised | 553.28
+> Table 3: Performance of idiomify by different versions of Idiom2Vec.
 
-**from Table 2: increasing the size of the data helps, but removing stopwords does not help.**.
+**We also see **.
 
 ### Modeling Collocations of Idioms
 
