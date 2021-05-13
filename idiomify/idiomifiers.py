@@ -64,8 +64,10 @@ class Word2VecIdiomifier(Idiomifier):
             print("no tokens")
             return None
 
-        if mode == "sum":
+        if mode == "add":
             return np.array(token_vectors).sum(axis=0)
+        if mode == "mul":
+            return np.array(token_vectors).prod(axis=0)
         elif mode == "avg":
             return np.array(token_vectors).mean(axis=0)
         else:
