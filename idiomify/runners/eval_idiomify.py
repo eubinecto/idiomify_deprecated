@@ -50,17 +50,22 @@ def plot_medians(ranks_a: List[int],
                  ranks_c: List[int],
                  ranks_d: List[int],
                  ranks_e: List[int]):
+    median_a, var_a = median_and_var(ranks_a)
+    median_b, var_b = median_and_var(ranks_b)
+    median_c, var_c = median_and_var(ranks_c)
     median_d, var_d = median_and_var(ranks_d)
     median_e, var_e = median_and_var(ranks_e)
+    print(median_d, var_d)
+    print(median_e, var_e)
 
-    x = np.array([0, 1])
-    y = np.array([median_d, median_e])
+    x = np.array([0, 1, 2, 3, 4])
+    y = np.array([median_a, median_b, median_c, median_d, median_e])
     # Calculate the simple average of the data
-    x_ticks = ["D(555-567)", "E(23115-142905)"]
+    x_ticks = ["A", "B", "C", "D", "E"]
     plt.xticks(x, x_ticks)
     plt.bar(x, y, width=0.5)
     plt.xlabel("The frequency groups")
-    plt.title("Median Ranks of groups D and E")
+    plt.title("Median Ranks of the Frequency Groups")
     plt.ylabel("Median Rank")
     plt.legend(loc='upper right')
     plt.show()
