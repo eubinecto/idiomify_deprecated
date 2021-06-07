@@ -51,7 +51,7 @@ def main():
                         # the more words you give it, the better the result will be.
                         # generally, you should provide more than 3 words.
                         # the more consistent the better the results will be.
-                        default="wait, excitedly, anxiously, hopefully")
+                        default="dilemma, difficult")
     parser.add_argument("--phrase_vector_mode",
                         type=str,
                         default="avg")
@@ -97,7 +97,7 @@ def main():
     idfs = (verb2idf, noun2idf, adj2idf, adv2idf)
 
     # --- instantiate a idiomifier --- #
-    idiomifier = Word2VecIdiomifier(nlp, idiom_keys, idiom2vec, idfs)
+    idiomifier = Word2VecIdiomifier(nlp, idiom_keys, idiom2vec)
 
     # --- idiomify the phrase --- #
     results = idiomifier(args.synonyms, mode=args.phrase_vector_mode)[:args.top_n]

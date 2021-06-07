@@ -15,15 +15,12 @@ class Idiomifier:
     def __call__(self, phrase: str) -> List[Tuple[str, float]]:
         raise NotImplementedError
 
-    def to_lemma2pos(self, phrase: str) -> List[Tuple[str, str]]:
-        # refine the phrase
+    def refine(self, phrase: str) -> List[Tuple[str, str]]:
         return [
-            # uncased
-            (token.lemma_.lower(), token.pos_)  # lemmatise it
+            (token.lemma_.lower())  # lemmatise and uncase
             for token in self.nlp(phrase)
-            # if not token.is_stop  # removing stopwords harms the performance
-            if not token.is_punct
-            if not token.like_num
+            if not token.is_punct  # filter punctuations.
+            if not token.like_num  # filter numbers.
         ]
 
 
@@ -45,33 +42,32 @@ class Word2VecIdiomifier(Idiomifier):
         :param phrase:
         :return: a list of tuples. [idiom, score]
         """
+        # 1. get the phrase vector
         phrase_vector = self.phrase_vector(phrase, mode)
+        # 2. and find the most similar idioms.
         return self.most_similar_idioms(phrase_vector)
 
     def phrase_vector(self, phrase: str, mode: str) -> np.array:
-        lemma2pos = self.to_lemma2pos(phrase)
-        avail_lemma2pos = [
-            (lemma, pos)
-            for lemma, pos in lemma2pos
-            if self.idiom2vec_wv.wv.key_to_index.get(lemma, None)
+        # 1. lemmatise the phrase
+        tokens = self.refine(phrase)
+        # 2. get the tokens that the idiom2vec has seen in the training
+        avail_tokens = [
+            token
+            for token in tokens
+            if self.idiom2vec_wv.wv.key_to_index.get(token, None)
         ]
+        # 3. vectorize the tokens.
         token_vectors = [
-            self.idiom2vec_wv.wv.get_vector(lemma)
-            for lemma, _ in avail_lemma2pos
+            self.idiom2vec_wv.wv.get_vector(token)
+            for token in avail_tokens
         ]
+        # 4. abort if Idiom2Vec has not seen any of the tokens in training
         if len(token_vectors) == 0:
             # a placeholder
             print("no tokens")
             return None
-
-        if mode == "add":
-            return np.array(token_vectors).sum(axis=0)
-        if mode == "mul":
-            return np.array(token_vectors).prod(axis=0)
-        elif mode == "avg":
-            return np.array(token_vectors).mean(axis=0)
-        else:
-            raise ValueError
+        # 5. average the token vectors to get the phrase vector and return
+        return np.array(token_vectors).mean(axis=0)
 
     def most_similar_idioms(self, vector: np.array) -> List[Tuple[str, float]]:
         sim_to_idioms = self.idiom2vec_wv.wv.cosine_similarities(vector, self.idiom_vectors)
